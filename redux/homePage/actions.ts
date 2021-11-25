@@ -1,9 +1,12 @@
-export enum HomeActionWithoutPayload {}
+export enum HomeActionWithoutPayload {
+    OPEN_DRAWER = 'HOME_OPEN_DRAWER',
+    CLOSE_DRAWER = 'CLOSE_DRAWER',
+}
 
 export enum HomeActionWithPayload {
-    SET_EMAIL,
-    SET_USERNAME,
-    SET_ID,
+    SET_EMAIL = 'HOME_SET_EMAIL',
+    SET_USERNAME = 'HOME_SET_USERNAME',
+    SET_ID = 'HOME_SET_ID',
 }
 
 interface ActionWithoutPayload {
@@ -16,6 +19,18 @@ interface ActionWithPayload<T> {
 }
 
 export type Action<T = string> = ActionWithoutPayload | ActionWithPayload<T>;
+
+export const openDrawer = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.OPEN_DRAWER,
+    };
+};
+
+export const closeDrawer = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.CLOSE_DRAWER,
+    };
+};
 
 export const setEmail = (email: string): Action => {
     return {
