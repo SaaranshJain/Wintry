@@ -9,6 +9,12 @@ interface IncomingDataVerify {
     token: string;
 }
 
+export interface Chat {
+    pfp: string | null;
+    name: string;
+    id: string;
+}
+
 interface OutgoingDataNotVerified {
     verified: false;
 }
@@ -18,6 +24,7 @@ interface OutgoingDataVerified {
     id: string;
     email: string;
     username: string;
+    chats: [Chat[], Chat[]];
 }
 
 export type OutgoingDataVerify = OutgoingDataNotVerified | OutgoingDataVerified;
@@ -31,7 +38,21 @@ const handler: RequestHandler<IncomingDataVerify, OutgoingDataVerify> = async (r
 
     if (!user) return res.status(400).json({ verified: false });
 
-    res.status(200).json({ verified: true, id: user.id, email: user.email, username: user.username });
+    const friends = (await user.getFirstFriend({ attributes: ['pfp', 'id', 'username'] })).map(friend => ({
+        id: friend.id,
+        pfp: friend.pfp,
+        name: friend.username,
+    }));
+
+    const rooms = (await user.getRooms({ attributes: ['pfp', 'id', 'name'] })).map(room => ({
+        id: room.id,
+        pfp: room.pfp,
+        name: room.name,
+    }));
+
+    const chats: [Chat[], Chat[]] = [friends, rooms];
+
+    res.status(200).json({ verified: true, id: user.id, email: user.email, username: user.username, chats });
 };
 
 export default handler;

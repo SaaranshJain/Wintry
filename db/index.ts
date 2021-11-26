@@ -42,15 +42,19 @@ export class User extends Model {
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getFriends!: BelongsToManyGetAssociationsMixin<User>;
-    public countFriends!: BelongsToManyCountAssociationsMixin;
-    public hasFriend!: BelongsToManyHasAssociationMixin<User, string>;
-    public hasFriends!: BelongsToManyHasAssociationsMixin<User, string>;
-    public addFriend!: BelongsToManyAddAssociationMixin<User, string>;
-    public addFriends!: BelongsToManyAddAssociationsMixin<User, string>;
-    public removeFriend!: BelongsToManyRemoveAssociationMixin<User, string>;
-    public removeFriends!: BelongsToManyRemoveAssociationsMixin<User, string>;
-    public createFriend!: BelongsToManyCreateAssociationMixin<User>;
+    public getFirstFriend!: BelongsToManyGetAssociationsMixin<User>;
+    public countFirstFriend!: BelongsToManyCountAssociationsMixin;
+    public hasFirstFriend!: BelongsToManyHasAssociationMixin<User, string>;
+    public addFirstFriend!: BelongsToManyAddAssociationMixin<User, string>;
+    public removeFirstFriend!: BelongsToManyRemoveAssociationMixin<User, string>;
+    public createFirstFriend!: BelongsToManyCreateAssociationMixin<User>;
+
+    public getSecondFriend!: BelongsToManyGetAssociationsMixin<User>;
+    public countSecondFriend!: BelongsToManyCountAssociationsMixin;
+    public hasSecondFriend!: BelongsToManyHasAssociationMixin<User, string>;
+    public addSecondFriend!: BelongsToManyAddAssociationMixin<User, string>;
+    public removeSecondFriend!: BelongsToManyRemoveAssociationMixin<User, string>;
+    public createSecondFriend!: BelongsToManyCreateAssociationMixin<User>;
 
     public getRooms!: BelongsToManyGetAssociationsMixin<Room>;
     public countRooms!: BelongsToManyCountAssociationsMixin;
@@ -211,13 +215,27 @@ Message.init(
     }
 );
 
-User.belongsToMany(User, { through: 'friends', as: 'firstfriend', foreignKey: 'firstFriendId' });
-User.belongsToMany(User, { through: 'friends', as: 'secondfriend', foreignKey: 'secondFriendId' });
+class Friend extends Model {
+    public firstFriendId!: string;
+    public secondFriendId!: string;
+}
 
-User.belongsToMany(Room, { through: 'roomusers' });
+Friend.init({}, { sequelize, tableName: 'friends' });
+
+class RoomUser extends Model {
+    public UserId!: string;
+    public RoomId!: string;
+}
+
+RoomUser.init({}, { sequelize, tableName: 'roomusers' });
+
+User.belongsToMany(User, { through: Friend, as: 'FirstFriend', foreignKey: 'firstFriendId' });
+User.belongsToMany(User, { through: Friend, as: 'SecondFriend', foreignKey: 'secondFriendId' });
+
+User.belongsToMany(Room, { through: RoomUser, foreignKey: 'UserId' });
 User.hasMany(Message);
 
-Room.belongsToMany(User, { through: 'roomusers' });
+Room.belongsToMany(User, { through: RoomUser, foreignKey: 'RoomId' });
 Room.hasMany(Message);
 
 Message.belongsTo(User);
@@ -228,6 +246,8 @@ Message.belongsTo(Room);
         await User.sync({ alter: true });
         await Room.sync({ alter: true });
         await Message.sync({ alter: true });
+        await Friend.sync({ alter: true });
+        await RoomUser.sync({ alter: true });
     } catch (err) {
         console.error(err);
     }

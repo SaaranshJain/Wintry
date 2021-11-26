@@ -1,12 +1,17 @@
+import { Chat } from '@/pages/api/verify';
+
 export enum HomeActionWithoutPayload {
-    OPEN_DRAWER = 'HOME_OPEN_DRAWER',
-    CLOSE_DRAWER = 'CLOSE_DRAWER',
+    OPEN_LEFT_DRAWER = 'HOME_OPEN_LEFT_DRAWER',
+    CLOSE_LEFT_DRAWER = 'HOME_CLOSE_LEFT_DRAWER',
+    OPEN_RIGHT_DRAWER = 'HOME_OPEN_RIGHT_DRAWER',
+    CLOSE_RIGHT_DRAWER = 'HOME_CLOSE_RIGHT_DRAWER',
 }
 
 export enum HomeActionWithPayload {
     SET_EMAIL = 'HOME_SET_EMAIL',
     SET_USERNAME = 'HOME_SET_USERNAME',
     SET_ID = 'HOME_SET_ID',
+    SET_CHATS = 'HOME_SET_CHATS',
 }
 
 interface ActionWithoutPayload {
@@ -20,15 +25,27 @@ interface ActionWithPayload<T> {
 
 export type Action<T = string> = ActionWithoutPayload | ActionWithPayload<T>;
 
-export const openDrawer = (): Action => {
+export const openLeftDrawer = (): Action => {
     return {
-        type: HomeActionWithoutPayload.OPEN_DRAWER,
+        type: HomeActionWithoutPayload.OPEN_LEFT_DRAWER,
     };
 };
 
-export const closeDrawer = (): Action => {
+export const closeLeftDrawer = (): Action => {
     return {
-        type: HomeActionWithoutPayload.CLOSE_DRAWER,
+        type: HomeActionWithoutPayload.CLOSE_LEFT_DRAWER,
+    };
+};
+
+export const openRightDrawer = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.OPEN_RIGHT_DRAWER,
+    };
+};
+
+export const closeRightDrawer = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.CLOSE_RIGHT_DRAWER,
     };
 };
 
@@ -50,5 +67,12 @@ export const setID = (id: string): Action => {
     return {
         type: HomeActionWithPayload.SET_ID,
         payload: id,
+    };
+};
+
+export const setChats = (chats: [Chat[], Chat[]]): Action<[Chat[], Chat[]]> => {
+    return {
+        type: HomeActionWithPayload.SET_CHATS,
+        payload: chats,
     };
 };

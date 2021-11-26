@@ -1,3 +1,4 @@
+import { Chat } from '@/pages/api/verify';
 import { Action, HomeActionWithoutPayload, HomeActionWithPayload } from './actions';
 
 export interface HomePageState {
@@ -5,7 +6,9 @@ export interface HomePageState {
     email: string;
     username: string;
     widthMatch: boolean;
-    drawerOpen: boolean;
+    leftDrawerOpen: boolean;
+    rightDrawerOpen: boolean;
+    chats: [Chat[], Chat[]] | [];
 }
 
 const initialState: HomePageState = {
@@ -13,7 +16,9 @@ const initialState: HomePageState = {
     email: '',
     username: '',
     widthMatch: true,
-    drawerOpen: false,
+    leftDrawerOpen: false,
+    rightDrawerOpen: false,
+    chats: [],
 };
 
 const reducer = (state = initialState, action: Action<any>): HomePageState => {
@@ -39,18 +44,39 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             };
         }
 
-        case HomeActionWithoutPayload.OPEN_DRAWER: {
+        case HomeActionWithoutPayload.OPEN_LEFT_DRAWER: {
             return {
                 ...state,
-                drawerOpen: true,
-            }
+                leftDrawerOpen: true,
+            };
         }
 
-        case HomeActionWithoutPayload.CLOSE_DRAWER: {
+        case HomeActionWithoutPayload.CLOSE_LEFT_DRAWER: {
             return {
                 ...state,
-                drawerOpen: false,
-            }
+                leftDrawerOpen: false,
+            };
+        }
+
+        case HomeActionWithoutPayload.OPEN_RIGHT_DRAWER: {
+            return {
+                ...state,
+                rightDrawerOpen: true,
+            };
+        }
+
+        case HomeActionWithoutPayload.CLOSE_RIGHT_DRAWER: {
+            return {
+                ...state,
+                rightDrawerOpen: false,
+            };
+        }
+
+        case HomeActionWithPayload.SET_CHATS: {
+            return {
+                ...state,
+                chats: action.payload as [Chat[], Chat[]],
+            };
         }
 
         default: {

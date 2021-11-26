@@ -1,6 +1,15 @@
-import { closeDrawer, openDrawer, setEmail, setID, setUsername } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
+import {
+    closeLeftDrawer,
+    openLeftDrawer,
+    setEmail,
+    setChats,
+    setID,
+    setUsername,
+    closeRightDrawer,
+    openRightDrawer,
+} from '@/redux/homePage/actions';
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
 import {
     AppBar,
     Toolbar,
@@ -16,13 +25,13 @@ import {
     ListItemAvatar,
     ListItemText,
 } from '@mui/material';
-import { Menu } from '@mui/icons-material';
+import { Menu, People } from '@mui/icons-material';
 import axios from 'axios';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OutgoingDataVerify } from './api/verify';
+import type { OutgoingDataVerify } from './api/verify';
 import json2mq from 'json2mq';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
 import RightDrawer from '@/components/Home/Drawers/RightDrawer';
@@ -30,7 +39,7 @@ import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 const Home: NextPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { drawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
+    const { leftDrawerOpen, rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
     const widthMatch = useMediaQuery(
         json2mq({
             minAspectRatio: '1/1',
@@ -47,11 +56,12 @@ const Home: NextPage = () => {
 
         axios.post<OutgoingDataVerify>('/api/verify', { token }).then(res => {
             if (res.data.verified) {
-                const { email, id, username } = res.data;
+                const { email, id, username, chats } = res.data;
 
                 dispatch(setEmail(email));
                 dispatch(setID(id));
                 dispatch(setUsername(username));
+                dispatch(setChats(chats));
                 return;
             }
 
@@ -68,17 +78,29 @@ const Home: NextPage = () => {
                     {!widthMatch && (
                         <IconButton
                             color="inherit"
-                            aria-label="open drawer"
+                            aria-label="open left drawer"
                             edge="start"
                             sx={{ mr: 2 }}
-                            onClick={() => (drawerOpen ? dispatch(closeDrawer()) : dispatch(openDrawer()))}
+                            onClick={() => (leftDrawerOpen ? dispatch(closeLeftDrawer()) : dispatch(openLeftDrawer()))}
                         >
                             <Menu />
                         </IconButton>
                     )}
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                         Omnipresent
                     </Typography>
+                    {!widthMatch && (
+                        <IconButton
+                            color="inherit"
+                            aria-label="open right drawer"
+                            // sx={{ position: 'absolute', right: '1rem' }}
+                            onClick={() =>
+                                rightDrawerOpen ? dispatch(closeRightDrawer()) : dispatch(openRightDrawer())
+                            }
+                        >
+                            <People />
+                        </IconButton>
+                    )}
                 </Toolbar>
             </AppBar>
             <LeftDrawer widthMatch={widthMatch} />

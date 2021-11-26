@@ -1,4 +1,4 @@
-import { closeDrawer, openDrawer } from '@/redux/homePage/actions';
+import { closeRightDrawer, openRightDrawer } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';
 import { Toolbar, Box, List, ListItem, ListItemIcon, Avatar, Divider, SwipeableDrawer, Drawer } from '@mui/material';
@@ -29,16 +29,16 @@ const RightDrawerContent: React.FC = () => (
 );
 
 const RightDrawer: React.FC<{ widthMatch: boolean }> = ({ widthMatch }) => {
-    const { drawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
+    const { rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
     const dispatch = useDispatch();
 
     if (!widthMatch) {
         return (
             <SwipeableDrawer
                 PaperProps={{ elevation: 1 }}
-                open={drawerOpen}
-                onClose={() => dispatch(closeDrawer())}
-                onOpen={() => dispatch(openDrawer())}
+                open={rightDrawerOpen}
+                onClose={() => dispatch(closeRightDrawer())}
+                onOpen={() => dispatch(openRightDrawer())}
                 anchor="right"
             >
                 <RightDrawerContent />
