@@ -9,6 +9,7 @@ export interface HomePageState {
     leftDrawerOpen: boolean;
     rightDrawerOpen: boolean;
     chats: [Chat[], Chat[]] | [];
+    currentChat: string;
 }
 
 const initialState: HomePageState = {
@@ -19,6 +20,7 @@ const initialState: HomePageState = {
     leftDrawerOpen: false,
     rightDrawerOpen: false,
     chats: [],
+    currentChat: 'omnipresent',
 };
 
 const reducer = (state = initialState, action: Action<any>): HomePageState => {
@@ -76,6 +78,13 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             return {
                 ...state,
                 chats: action.payload as [Chat[], Chat[]],
+            };
+        }
+
+        case HomeActionWithPayload.SET_CURRENT_CHAT: {
+            return {
+                ...state,
+                currentChat: action.payload as string,
             };
         }
 

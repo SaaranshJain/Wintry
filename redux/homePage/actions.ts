@@ -12,6 +12,7 @@ export enum HomeActionWithPayload {
     SET_USERNAME = 'HOME_SET_USERNAME',
     SET_ID = 'HOME_SET_ID',
     SET_CHATS = 'HOME_SET_CHATS',
+    SET_CURRENT_CHAT = 'HOME_SET_CURRENT_CHAT',
 }
 
 interface ActionWithoutPayload {
@@ -74,5 +75,12 @@ export const setChats = (chats: [Chat[], Chat[]]): Action<[Chat[], Chat[]]> => {
     return {
         type: HomeActionWithPayload.SET_CHATS,
         payload: chats,
+    };
+};
+
+export const setCurrentChat = (chat: string): Action => {
+    return {
+        type: HomeActionWithPayload.SET_CURRENT_CHAT,
+        payload: chat,
     };
 };
