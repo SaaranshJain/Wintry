@@ -106,7 +106,7 @@ const Home: NextPage = () => {
             <LeftDrawer widthMatch={widthMatch} />
             <Box component="main" sx={{ width: '100%' }}>
                 <Toolbar />
-                <List sx={{ width: `calc(100% - 72px${widthMatch ? ' - 10vh' : ''})`, bgcolor: 'background.paper' }}>
+                <List sx={{ width: `calc(100% - 72px${widthMatch ? ' - 240px' : ''})`, bgcolor: 'background.paper' }}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
                             <Avatar alt="Remy Sharp" />

@@ -38,11 +38,19 @@ const handler: RequestHandler<IncomingDataVerify, OutgoingDataVerify> = async (r
 
     if (!user) return res.status(400).json({ verified: false });
 
-    const friends = (await user.getFirstFriend({ attributes: ['pfp', 'id', 'username'] })).map(friend => ({
-        id: friend.id,
-        pfp: friend.pfp,
-        name: friend.username,
-    }));
+    const friends = (await user.getFirstFriend({ attributes: ['pfp', 'id', 'username'] }))
+        .map(friend => ({
+            id: friend.id,
+            pfp: friend.pfp,
+            name: friend.username,
+        }))
+        .concat(
+            (await user.getSecondFriend({ attributes: ['pfp', 'id', 'username'] })).map(friend => ({
+                id: friend.id,
+                pfp: friend.pfp,
+                name: friend.username,
+            }))
+        );
 
     const rooms = (await user.getRooms({ attributes: ['pfp', 'id', 'name'] })).map(room => ({
         id: room.id,

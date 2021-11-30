@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+setdb.js
 
 # next.js
 /.next/

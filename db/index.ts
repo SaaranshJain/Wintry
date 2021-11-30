@@ -124,15 +124,15 @@ export class Room extends Model {
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getMembers!: BelongsToManyGetAssociationsMixin<User>;
-    public countMembers!: BelongsToManyCountAssociationsMixin;
-    public hasMember!: BelongsToManyHasAssociationMixin<User, string>;
-    public hasMembers!: BelongsToManyHasAssociationsMixin<User, string>;
-    public addMember!: BelongsToManyAddAssociationMixin<User, string>;
-    public addMembers!: BelongsToManyAddAssociationsMixin<User, string>;
-    public removeMember!: BelongsToManyRemoveAssociationMixin<User, string>;
-    public removeMembers!: BelongsToManyRemoveAssociationsMixin<User, string>;
-    public createMember!: BelongsToManyCreateAssociationMixin<User>;
+    public getUsers!: BelongsToManyGetAssociationsMixin<User>;
+    public countUsers!: BelongsToManyCountAssociationsMixin;
+    public hasUser!: BelongsToManyHasAssociationMixin<User, string>;
+    public hasUsers!: BelongsToManyHasAssociationsMixin<User, string>;
+    public addUser!: BelongsToManyAddAssociationMixin<User, string>;
+    public addUsers!: BelongsToManyAddAssociationsMixin<User, string>;
+    public removeUser!: BelongsToManyRemoveAssociationMixin<User, string>;
+    public removeUsers!: BelongsToManyRemoveAssociationsMixin<User, string>;
+    public createUser!: BelongsToManyCreateAssociationMixin<User>;
 
     public getMessages!: HasManyGetAssociationsMixin<Message>;
     public countMessages!: HasManyCountAssociationsMixin;
@@ -145,7 +145,7 @@ export class Room extends Model {
     public createMessage!: HasManyCreateAssociationMixin<Message>;
 
     public static associations: {
-        member: Association<Room, User>;
+        user: Association<Room, User>;
         message: Association<Room, Message>;
     };
 }
@@ -243,11 +243,11 @@ Message.belongsTo(Room);
 
 (async () => {
     try {
-        await User.sync({ alter: true });
-        await Room.sync({ alter: true });
-        await Message.sync({ alter: true });
-        await Friend.sync({ alter: true });
-        await RoomUser.sync({ alter: true });
+        await User.sync();
+        await Room.sync();
+        await Message.sync();
+        await Friend.sync();
+        await RoomUser.sync();
     } catch (err) {
         console.error(err);
     }
