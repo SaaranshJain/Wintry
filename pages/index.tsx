@@ -46,6 +46,8 @@ const Home: NextPage = () => {
         })
     );
 
+    const [messages, setMessages] = React.useState([]);
+
     React.useEffect(() => {
         const token = localStorage.getItem('token');
 
@@ -107,28 +109,32 @@ const Home: NextPage = () => {
             <Box component="main" sx={{ width: '100%' }}>
                 <Toolbar />
                 <List sx={{ width: `calc(100% - 72px${widthMatch ? ' - 240px' : ''})`, bgcolor: 'background.paper' }}>
-                    <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar alt="Remy Sharp" />
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary="Brunch this weekend?"
-                            secondary={
-                                <>
-                                    <Typography
-                                        sx={{ display: 'inline' }}
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
-                                    >
-                                        Ali Connors
-                                    </Typography>
-                                    {" — I'll be in your neighborhood doing errands this…"}
-                                </>
-                            }
-                        />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
+                    {messages.map(msg => (
+                        <>
+                            <ListItem alignItems="flex-start">
+                                <ListItemAvatar>
+                                    <Avatar alt="Remy Sharp" />
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Brunch this weekend?"
+                                    secondary={
+                                        <>
+                                            <Typography
+                                                sx={{ display: 'inline' }}
+                                                component="span"
+                                                variant="body2"
+                                                color="text.primary"
+                                            >
+                                                Ali Connors
+                                            </Typography>
+                                            {" — I'll be in your neighborhood doing errands this…"}
+                                        </>
+                                    }
+                                />
+                            </ListItem>
+                            <Divider variant="inset" component="li" />
+                        </>
+                    ))}
                 </List>
                 <RightDrawer widthMatch={widthMatch} />
             </Box>
