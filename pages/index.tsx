@@ -1,31 +1,18 @@
-import {
-    closeLeftDrawer,
-    openLeftDrawer,
-    setEmail,
-    setChats,
-    setID,
-    setUsername,
-    closeRightDrawer,
-    openRightDrawer,
-} from '@/redux/homePage/actions';
+import { setEmail, setChats, setID, setUsername } from '@/redux/homePage/actions';
 import type { HomePageState } from '@/redux/homePage/reducer';
 import type { State } from '@/redux/store';
 import {
-    AppBar,
     Toolbar,
-    Typography,
     Box,
     List,
     ListItem,
     useMediaQuery,
     Divider,
-    IconButton,
     Avatar,
     CssBaseline,
     ListItemAvatar,
     ListItemText,
 } from '@mui/material';
-import { Menu, People } from '@mui/icons-material';
 import axios from 'axios';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -36,11 +23,12 @@ import json2mq from 'json2mq';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
 import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 import { Message, OutgoingDataGetMessages } from './api/get-messages';
+import Navbar from '@/components/Home/Navbar';
 
 const Home: NextPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { leftDrawerOpen, rightDrawerOpen, currentChat } = useSelector<State, HomePageState>(state => state.homePage);
+    const { currentChat } = useSelector<State, HomePageState>(state => state.homePage);
     const widthMatch = useMediaQuery(
         json2mq({
             minAspectRatio: '1/1',
@@ -82,36 +70,7 @@ const Home: NextPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    {!widthMatch && (
-                        <IconButton
-                            color="inherit"
-                            aria-label="open left drawer"
-                            edge="start"
-                            sx={{ mr: 2 }}
-                            onClick={() => (leftDrawerOpen ? dispatch(closeLeftDrawer()) : dispatch(openLeftDrawer()))}
-                        >
-                            <Menu />
-                        </IconButton>
-                    )}
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        Omnipresent
-                    </Typography>
-                    {!widthMatch && (
-                        <IconButton
-                            color="inherit"
-                            aria-label="open right drawer"
-                            // sx={{ position: 'absolute', right: '1rem' }}
-                            onClick={() =>
-                                rightDrawerOpen ? dispatch(closeRightDrawer()) : dispatch(openRightDrawer())
-                            }
-                        >
-                            <People />
-                        </IconButton>
-                    )}
-                </Toolbar>
-            </AppBar>
+            <Navbar />
             <LeftDrawer widthMatch={widthMatch} />
             <Box component="main" sx={{ width: '100%' }}>
                 <Toolbar />
