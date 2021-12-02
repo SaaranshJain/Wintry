@@ -181,9 +181,9 @@ export class Message extends Model {
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getAuthor!: BelongsToGetAssociationMixin<User>;
-    public setAuthor!: BelongsToSetAssociationMixin<User, string>;
-    public createAuthor!: BelongsToCreateAssociationMixin<User>;
+    public getUser!: BelongsToGetAssociationMixin<User>;
+    public setUser!: BelongsToSetAssociationMixin<User, string>;
+    public createUser!: BelongsToCreateAssociationMixin<User>;
 
     public getRoom!: BelongsToGetAssociationMixin<Room>;
     public setRoom!: BelongsToSetAssociationMixin<Room, string>;

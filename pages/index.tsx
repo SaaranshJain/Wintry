@@ -35,18 +35,25 @@ import type { OutgoingDataVerify } from './api/verify';
 import json2mq from 'json2mq';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
 import RightDrawer from '@/components/Home/Drawers/RightDrawer';
+import { Message, OutgoingDataGetMessages } from './api/get-messages';
 
 const Home: NextPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { leftDrawerOpen, rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
+    const { leftDrawerOpen, rightDrawerOpen, currentChat } = useSelector<State, HomePageState>(state => state.homePage);
     const widthMatch = useMediaQuery(
         json2mq({
             minAspectRatio: '1/1',
         })
     );
 
-    const [messages, setMessages] = React.useState([]);
+    const [messages, setMessages] = React.useState<Message[]>([]);
+
+    React.useEffect(() => {
+        axios
+            .post<OutgoingDataGetMessages>('/api/get-messages', { id: currentChat })
+            .then(res => setMessages(res.data.messages));
+    }, [currentChat]);
 
     React.useEffect(() => {
         const token = localStorage.getItem('token');
@@ -113,24 +120,14 @@ const Home: NextPage = () => {
                         <>
                             <ListItem alignItems="flex-start">
                                 <ListItemAvatar>
-                                    <Avatar alt="Remy Sharp" />
+                                    <Avatar src={msg.pfp}>
+                                        {msg.author
+                                            .split(' ')
+                                            .reduce((a, v) => a + v[0], '')
+                                            .slice(0, 2)}
+                                    </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText
-                                    primary="Brunch this weekend?"
-                                    secondary={
-                                        <>
-                                            <Typography
-                                                sx={{ display: 'inline' }}
-                                                component="span"
-                                                variant="body2"
-                                                color="text.primary"
-                                            >
-                                                Ali Connors
-                                            </Typography>
-                                            {" — I'll be in your neighborhood doing errands this…"}
-                                        </>
-                                    }
-                                />
+                                <ListItemText primary={msg.author} secondary={msg.content} />
                             </ListItem>
                             <Divider variant="inset" component="li" />
                         </>
