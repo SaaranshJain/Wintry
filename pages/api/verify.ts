@@ -1,5 +1,5 @@
 import { User } from '@/db';
-import { RequestHandler } from '@/helpers';
+import { PostRequestHandler } from '@/helpers';
 import { config as configEnv } from 'dotenv';
 import jwt from 'jsonwebtoken';
 
@@ -29,7 +29,7 @@ interface OutgoingDataVerified {
 
 export type OutgoingDataVerify = OutgoingDataNotVerified | OutgoingDataVerified;
 
-const handler: RequestHandler<IncomingDataVerify, OutgoingDataVerify> = async (req, res) => {
+const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = async (req, res) => {
     const ver = jwt.verify(req.body.token, process.env['SECRET'] || '');
 
     if (typeof ver === 'string') return res.status(500).json({ verified: false });

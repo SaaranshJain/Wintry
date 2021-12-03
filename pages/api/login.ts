@@ -1,5 +1,5 @@
 import { User } from '@/db';
-import { RequestHandler } from '@/helpers';
+import { PostRequestHandler } from '@/helpers';
 import { config as configEnv } from 'dotenv';
 import jwt from 'jsonwebtoken';
 
@@ -22,7 +22,7 @@ interface OutgoingDataLoginSuccess {
 
 export type OutgoingDataLogin = OutgoingDataLoginFail | OutgoingDataLoginSuccess;
 
-const handler: RequestHandler<IncomingDataLogin, OutgoingDataLogin> = async (req, res) => {
+const handler: PostRequestHandler<IncomingDataLogin, OutgoingDataLogin> = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });

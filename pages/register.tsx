@@ -11,6 +11,7 @@ import { OutgoingDataRegister } from './api/register';
 import { useRouter } from 'next/router';
 import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
+import { OutgoingDataCheckEmail } from './api/check-email';
 
 const steps = ['Enter login information', 'Create your profile'];
 
@@ -45,9 +46,9 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('The passwords do not match'));
             }
 
-            const res = await axios.get(`/api/register?email=${encodeURIComponent(email)}`);
+            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`);
 
-            if (res.status === 400) {
+            if (res.data.exists) {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('That email is taken'));
             }

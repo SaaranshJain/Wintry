@@ -1,5 +1,5 @@
 import { Room } from '@/db';
-import { RequestHandler } from '@/helpers';
+import { PostRequestHandler } from '@/helpers';
 import { config as configEnv } from 'dotenv';
 
 configEnv();
@@ -18,7 +18,7 @@ export interface OutgoingDataRoomUsers {
     members: Member[];
 }
 
-const handler: RequestHandler<IncomingDataRoomUsers, OutgoingDataRoomUsers> = async (req, res) => {
+const handler: PostRequestHandler<IncomingDataRoomUsers, OutgoingDataRoomUsers> = async (req, res) => {
     const { roomID } = req.body;
     console.log(roomID);
     const room = await Room.findByPk(roomID);

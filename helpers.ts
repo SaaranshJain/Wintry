@@ -1,7 +1,13 @@
 import { NextApiRequest, NextApiResponse as ApiResponse } from 'next';
+import { readFile, writeFile } from 'fs/promises';
 
-interface ApiRequest<T> extends NextApiRequest {
-    body: T;
+export interface ApiRequest<IncomingData> extends NextApiRequest {
+    body: IncomingData;
 }
 
-export type RequestHandler<T, V> = (req: ApiRequest<T>, res: ApiResponse<V>) => any;
+export type PostRequestHandler<IncomingData, OutgoingData> = (req: ApiRequest<IncomingData>, res: ApiResponse<OutgoingData>) => any;
+
+export const writeToLog = async (route: string, logmsg: string) => {
+    const logFilePath = `./logs/${route}.log`
+    await writeFile(logFilePath, `${await readFile(logFilePath)}[${new Date().toString()}] ${logmsg}\n`);
+}
