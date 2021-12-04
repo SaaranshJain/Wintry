@@ -24,6 +24,8 @@ setdb.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+logs
+temp-email-verify.json
 
 # local env files
 .env.*

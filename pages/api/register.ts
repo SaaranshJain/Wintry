@@ -45,7 +45,7 @@ const parseForm = (req: ApiRequest<IncomingDataRegister>) =>
 
 const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = async (req, res) => {
     if (req.method !== 'POST') {
-        res.status(405).json({ token: null }); // method not allowed
+        res.status(405); // method not allowed
         return await writeToLog('register', `Request sent to /api/register using unallowed method : ${req.method}\n`);
     }
 
@@ -65,7 +65,7 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
             res.status(400).json({ token: null });
             return await writeToLog(
                 'register',
-                `User tried registering with a pre-existing email : ${email} indicating that the previous check failed`
+                'User tried registering with a pre-existing email indicating that the previous check failed'
             );
         }
 
@@ -98,7 +98,7 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
 
         const token = jwt.sign({ id: user.id }, jwtSecret);
         res.status(200).json({ token });
-        await writeToLog('register', `Registered user with email : ${email}`);
+        await writeToLog('register', 'Registered new user');
     } catch (err: any) {
         console.error(err);
         res.status(500).json({ token: null });

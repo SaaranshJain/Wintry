@@ -9,5 +9,5 @@ export type PostRequestHandler<IncomingData, OutgoingData> = (req: ApiRequest<In
 
 export const writeToLog = async (route: string, logmsg: string) => {
     const logFilePath = `./logs/${route}.log`
-    await writeFile(logFilePath, `${await readFile(logFilePath)}[${new Date().toString()}] ${logmsg}\n`);
+    await writeFile(logFilePath, `${await readFile(logFilePath)}[${new Date().toString()}]\n${logmsg}\n`);
 }

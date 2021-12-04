@@ -12,11 +12,12 @@ import { useRouter } from 'next/router';
 import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
 import { OutgoingDataCheckEmail } from './api/check-email';
+import { OutgoingDataVerifyOTP } from './api/verify-otp';
 
-const steps = ['Enter login information', 'Create your profile'];
+const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
 
 const Register: NextPage = () => {
-    const { about, activeStep, confirmPassword, email, password, pfp, username } = useSelector<
+    const { about, activeStep, confirmPassword, email, password, pfp, username, code } = useSelector<
         State,
         RegisterPageState
     >(state => state.registerPage);
@@ -46,9 +47,9 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('The passwords do not match'));
             }
 
-            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`);
+            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`, { email });
 
-            if (res.data.exists) {
+            if (!res.data.allow) {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('That email is taken'));
             }
@@ -57,6 +58,22 @@ const Register: NextPage = () => {
         }
 
         if (activeStep === 1) {
+            if (!code) {
+                dispatch(showDialog());
+                return dispatch(setDialogMsg('Please enter the code'));
+            }
+            
+            const res = await axios.post<OutgoingDataVerifyOTP>('/api/verify-otp', { email, otp: code })
+            
+            if (!res.data.verified) {
+                dispatch(showDialog());
+                return dispatch(setDialogMsg('Incorrect OTP'));
+            }
+
+            return dispatch(nextStep());
+        }
+
+        if (activeStep === 2) {
             if (!username) {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('Please enter a username'));

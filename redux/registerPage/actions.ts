@@ -14,6 +14,7 @@ export enum RegisterActionWithPayload {
     SET_USERNAME = 'REGISTER_SET_USERNAME',
     SET_ABOUT = 'REGISTER_SET_ABOUT',
     SET_PFP = 'REGISTER_SET_PFP',
+    SET_CODE = 'REGISTER_SET_CODE',
 }
 
 interface ActionWithoutPayload {
@@ -103,5 +104,12 @@ export const setPfp = (pfp: File): Action<File> => {
     return {
         type: RegisterActionWithPayload.SET_PFP,
         payload: pfp,
+    };
+};
+
+export const setCode = (code: string): Action => {
+    return {
+        type: RegisterActionWithPayload.SET_CODE,
+        payload: code,
     };
 };

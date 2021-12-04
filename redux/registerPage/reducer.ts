@@ -10,6 +10,7 @@ export interface RegisterPageState {
     username: string;
     about: string;
     pfp?: File;
+    code: string;
 }
 
 const initialState: RegisterPageState = {
@@ -21,6 +22,7 @@ const initialState: RegisterPageState = {
     dialogMsg: '',
     username: '',
     about: '',
+    code: '',
 };
 
 const reducer = (state = initialState, action: Action): RegisterPageState => {
@@ -107,6 +109,13 @@ const reducer = (state = initialState, action: Action): RegisterPageState => {
             return {
                 ...state,
                 pfp: undefined,
+            };
+        }
+
+        case RegisterActionWithPayload.SET_CODE: {
+            return {
+                ...state,
+                code: action.payload,
             };
         }
 
