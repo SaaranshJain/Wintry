@@ -25,10 +25,10 @@ const handler: PostRequestHandler<IncomingDataVerifyOTP, OutgoingDataVerifyOTP> 
             res.status(400).json({ verified: false });
             return await writeToLog('register', 'User OTP verification failed');
         }
-        
+
         delete data[email];
         await writeFile('./temp-email-verify.json', JSON.stringify(data));
-        
+
         res.status(200).json({ verified: true });
     } catch (err: any) {
         res.status(500).json({ verified: false });

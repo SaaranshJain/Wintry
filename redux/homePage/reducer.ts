@@ -10,6 +10,8 @@ export interface HomePageState {
     rightDrawerOpen: boolean;
     chats: [Chat[], Chat[]] | [];
     currentChat: string;
+    loading: boolean;
+    modalState: 'closed' | 'add-friend' | 'create-room';
 }
 
 const initialState: HomePageState = {
@@ -21,6 +23,8 @@ const initialState: HomePageState = {
     rightDrawerOpen: false,
     chats: [],
     currentChat: 'omnipresent',
+    loading: true,
+    modalState: 'closed',
 };
 
 const reducer = (state = initialState, action: Action<any>): HomePageState => {
@@ -85,6 +89,27 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             return {
                 ...state,
                 currentChat: action.payload as string,
+            };
+        }
+
+        case HomeActionWithoutPayload.SET_LOADING_TRUE: {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+
+        case HomeActionWithoutPayload.SET_LOADING_FALSE: {
+            return {
+                ...state,
+                loading: false,
+            };
+        }
+
+        case HomeActionWithPayload.SET_MODAL_STATE: {
+            return {
+                ...state,
+                modalState: action.payload as 'closed' | 'add-friend' | 'create-room',
             };
         }
 

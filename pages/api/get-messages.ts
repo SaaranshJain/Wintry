@@ -26,19 +26,21 @@ const handler: PostRequestHandler<IncomingDataGetMessages, OutgoingDataGetMessag
         return res.status(200).json({ messages: [] });
     }
 
-    const messages = await room.getMessages();
+    const messageObjs = await room.getMessages();
 
-    const kek = Promise.all(messages.map(async msg => {
-        const author = await msg.getUser();
+    const messages = await Promise.all(
+        messageObjs.map(async msg => {
+            const author = await msg.getUser();
 
-        return {
-            content: msg.content,
-            pfp: author.pfp,
-            author: author.username,
-        };
-    }));
+            return {
+                content: msg.content,
+                pfp: author.pfp,
+                author: author.username,
+            };
+        })
+    );
 
-    res.status(200).json({ messages: await kek })
+    res.status(200).json({ messages });
 };
 
 export default handler;

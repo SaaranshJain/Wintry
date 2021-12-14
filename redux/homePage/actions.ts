@@ -5,6 +5,8 @@ export enum HomeActionWithoutPayload {
     CLOSE_LEFT_DRAWER = 'HOME_CLOSE_LEFT_DRAWER',
     OPEN_RIGHT_DRAWER = 'HOME_OPEN_RIGHT_DRAWER',
     CLOSE_RIGHT_DRAWER = 'HOME_CLOSE_RIGHT_DRAWER',
+    SET_LOADING_TRUE = 'HOME_SET_LOADING_TRUE',
+    SET_LOADING_FALSE = 'HOME_SET_LOADING_FALSE',
 }
 
 export enum HomeActionWithPayload {
@@ -13,6 +15,7 @@ export enum HomeActionWithPayload {
     SET_ID = 'HOME_SET_ID',
     SET_CHATS = 'HOME_SET_CHATS',
     SET_CURRENT_CHAT = 'HOME_SET_CURRENT_CHAT',
+    SET_MODAL_STATE = 'HOME_SET_MODAL_STATE',
 }
 
 interface ActionWithoutPayload {
@@ -82,5 +85,24 @@ export const setCurrentChat = (chat: string): Action => {
     return {
         type: HomeActionWithPayload.SET_CURRENT_CHAT,
         payload: chat,
+    };
+};
+
+export const setLoadingTrue = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.SET_LOADING_TRUE,
+    };
+};
+
+export const setLoadingFalse = (): Action => {
+    return {
+        type: HomeActionWithoutPayload.SET_LOADING_FALSE,
+    };
+};
+
+export const setModalState = (state: string): Action => {
+    return {
+        type: HomeActionWithPayload.SET_MODAL_STATE,
+        payload: state,
     };
 };

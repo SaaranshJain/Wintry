@@ -62,9 +62,9 @@ const Register: NextPage = () => {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('Please enter the code'));
             }
-            
-            const res = await axios.post<OutgoingDataVerifyOTP>('/api/verify-otp', { email, otp: code })
-            
+
+            const res = await axios.post<OutgoingDataVerifyOTP>('/api/verify-otp', { email, otp: code });
+
             if (!res.data.verified) {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('Incorrect OTP'));

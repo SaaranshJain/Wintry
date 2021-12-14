@@ -35,3 +35,6 @@ temp-email-verify.json
 
 # typescript
 *.tsbuildinfo
+
+# # public 
+# public/media/

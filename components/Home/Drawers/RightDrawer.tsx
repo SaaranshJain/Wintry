@@ -23,21 +23,21 @@ import axios from 'axios';
 import { Member, OutgoingDataRoomUsers } from '@/pages/api/room-users';
 
 const RightDrawerContent: React.FC = () => {
-    const { currentChat } = useSelector<State, HomePageState>(state => state.homePage);
+    const { currentChat, loading } = useSelector<State, HomePageState>(state => state.homePage);
     const [members, setMembers] = React.useState<Member[]>([]);
 
     React.useEffect(() => {
-        axios.post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat }).then(res => {
+        !loading ? axios.post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat }).then(res => {
             setMembers(res.data.members);
-        });
-    }, [currentChat]);
+        }) : null;
+    }, [currentChat, loading]);
 
     return (
         <>
             <Toolbar />
             <Accordion sx={{ width: 240 }} elevation={3} disableGutters>
                 <AccordionSummary expandIcon={<ExpandMore />}>
-                    <Typography>Online</Typography>
+                    <Typography>{currentChat === 'omnipresent' ? 'Commands' : 'Online'}</Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: '0.5rem' }}>
                     <List>

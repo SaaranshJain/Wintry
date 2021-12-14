@@ -47,14 +47,12 @@ export class User extends Model {
     public hasFirstFriend!: BelongsToManyHasAssociationMixin<User, string>;
     public addFirstFriend!: BelongsToManyAddAssociationMixin<User, string>;
     public removeFirstFriend!: BelongsToManyRemoveAssociationMixin<User, string>;
-    public createFirstFriend!: BelongsToManyCreateAssociationMixin<User>;
 
     public getSecondFriend!: BelongsToManyGetAssociationsMixin<User>;
     public countSecondFriend!: BelongsToManyCountAssociationsMixin;
     public hasSecondFriend!: BelongsToManyHasAssociationMixin<User, string>;
     public addSecondFriend!: BelongsToManyAddAssociationMixin<User, string>;
     public removeSecondFriend!: BelongsToManyRemoveAssociationMixin<User, string>;
-    public createSecondFriend!: BelongsToManyCreateAssociationMixin<User>;
 
     public getRooms!: BelongsToManyGetAssociationsMixin<Room>;
     public countRooms!: BelongsToManyCountAssociationsMixin;
@@ -232,10 +230,10 @@ RoomUser.init({}, { sequelize, tableName: 'roomusers' });
 User.belongsToMany(User, { through: Friend, as: 'FirstFriend', foreignKey: 'firstFriendId' });
 User.belongsToMany(User, { through: Friend, as: 'SecondFriend', foreignKey: 'secondFriendId' });
 
-User.belongsToMany(Room, { through: RoomUser, foreignKey: 'UserId' });
+User.belongsToMany(Room, { through: RoomUser });
 User.hasMany(Message);
 
-Room.belongsToMany(User, { through: RoomUser, foreignKey: 'RoomId' });
+Room.belongsToMany(User, { through: RoomUser });
 Room.hasMany(Message);
 
 Message.belongsTo(User);
