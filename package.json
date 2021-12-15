@@ -28,6 +28,8 @@
         "redux": "^4.1.2",
         "sass": "^1.43.4",
         "sequelize": "^6.9.0",
+        "socket.io": "^4.4.0",
+        "socket.io-client": "^4.4.0",
         "uuid": "^8.3.2"
     },
     "devDependencies": {

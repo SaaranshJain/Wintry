@@ -1,10 +1,11 @@
 import { OutgoingDataGetUsers } from '@/pages/api/get-users';
+import { setModalState } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';
 import { Autocomplete, Box, Button, Modal, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Option {
     label: string;
@@ -12,6 +13,8 @@ interface Option {
 
 const AddFriendModal: React.FC = () => {
     const { id, modalState } = useSelector<State, HomePageState>(state => state.homePage);
+    const dispatch = useDispatch();
+
     const [friendUsername, setFriendUsername] = React.useState('');
     const [options, setOptions] = React.useState<Option[]>([]);
     const autocompleteRef = React.useRef<any>();
@@ -30,6 +33,7 @@ const AddFriendModal: React.FC = () => {
                 minWidth: 240,
             }}
             open={modalState === 'add-friend'}
+            onClose={() => dispatch(setModalState('closed'))}
         >
             <Box sx={{ display: 'grid' }}>
                 <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center', mb: 3 }}>

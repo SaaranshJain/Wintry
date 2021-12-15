@@ -1,8 +1,18 @@
-import { NextApiRequest, NextApiResponse as ApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { readFile, writeFile } from 'fs/promises';
+import { Server as NetServer, Socket } from 'net';
+import { Server as SocketIOServer } from "socket.io";
 
 export interface ApiRequest<IncomingData> extends NextApiRequest {
     body: IncomingData;
+}
+
+export type ApiResponse<OutgoingData> = NextApiResponse<OutgoingData> & {
+    socket: Socket & {
+        server: NetServer & {
+            io: SocketIOServer
+        }
+    }
 }
 
 export type PostRequestHandler<IncomingData, OutgoingData> = (
