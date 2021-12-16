@@ -15,6 +15,7 @@ import axios from 'axios';
 import { OutgoingDataLogin } from './api/login';
 import { useRouter } from 'next/router';
 import { Close } from '@mui/icons-material';
+import { DialogIconButton } from '@/components/Register/Dialog/helpers';
 
 const Login: NextPage = () => {
     const [email, setEmail] = React.useState('');
@@ -53,17 +54,9 @@ const Login: NextPage = () => {
                     <Dialog open={dialogOpen}>
                         <DialogTitle>
                             Error
-                            <IconButton
-                                onClick={() => setDialogOpen(false)}
-                                sx={{
-                                    position: 'absolute',
-                                    right: 8,
-                                    top: 8,
-                                    color: theme => theme.palette.grey[500],
-                                }}
-                            >
+                            <DialogIconButton onClick={() => setDialogOpen(false)}>
                                 <Close />
-                            </IconButton>
+                            </DialogIconButton>
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText>{dialogMsg}</DialogContentText>

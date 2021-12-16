@@ -9,25 +9,7 @@ import {
 } from '@/redux/homePage/actions';
 import type { HomePageState } from '@/redux/homePage/reducer';
 import type { State } from '@/redux/store';
-import {
-    Toolbar,
-    Box,
-    List,
-    ListItem,
-    useMediaQuery,
-    Divider,
-    Avatar,
-    CssBaseline,
-    ListItemAvatar,
-    ListItemText,
-    SpeedDial,
-    SpeedDialAction,
-    SpeedDialIcon,
-    Input,
-    TextField,
-    Paper,
-    IconButton,
-} from '@mui/material';
+import { Toolbar, Box, useMediaQuery, CssBaseline, SpeedDialAction, SpeedDialIcon, IconButton } from '@mui/material';
 import axios from 'axios';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -42,6 +24,8 @@ import Navbar from '@/components/Home/Navbar';
 import { PeopleAlt, PersonAdd, Send } from '@mui/icons-material';
 import dynamic from 'next/dynamic';
 import io, { Socket } from 'socket.io-client';
+import MessagesList from '@/components/Home/MessageList';
+import { InputPaper, StyledSpeedDial, TextFieldInput } from '@/components/Home/helpers';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 
@@ -89,11 +73,11 @@ const Home: NextPage = () => {
     }, [loading]);
 
     React.useEffect(() => {
-        !loading
-            ? axios
-                  .post<OutgoingDataGetMessages>('/api/get-messages', { id: currentChat })
-                  .then(res => setMessages(res.data.messages))
-            : null;
+        if (!loading) {
+            axios
+                .post<OutgoingDataGetMessages>('/api/get-messages', { id: currentChat })
+                .then(res => setMessages(res.data.messages));
+        }
     }, [currentChat, loading]);
 
     React.useEffect(() => {
@@ -132,41 +116,9 @@ const Home: NextPage = () => {
                     <LeftDrawer widthMatch={widthMatch} />
                     <Box component="main" sx={{ width: '100%' }}>
                         <Toolbar />
-                        <List
-                            sx={{
-                                width: `calc(100% - 72px${widthMatch ? ' - 240px' : ''})`,
-                                bgcolor: 'background.paper',
-                            }}
-                        >
-                            {messages.map(msg => (
-                                <>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemAvatar>
-                                            <Avatar src={msg.pfp}>
-                                                {msg.author
-                                                    .split(' ')
-                                                    .reduce((a, v) => a + v[0], '')
-                                                    .slice(0, 2)}
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={msg.author} secondary={msg.content} />
-                                    </ListItem>
-                                    <Divider variant="inset" component="li" />
-                                </>
-                            ))}
-                        </List>
-                        <Paper
-                            elevation={0}
-                            sx={{
-                                display: 'grid',
-                                gridTemplateColumns: '20fr 1fr',
-                                position: 'fixed',
-                                bottom: '1rem',
-                                left: '108px',
-                                right: '272px',
-                            }}
-                        >
-                            <TextField
+                        <MessagesList messages={messages} />
+                        <InputPaper elevation={0}>
+                            <TextFieldInput
                                 multiline
                                 autoFocus
                                 maxRows={5}
@@ -178,11 +130,6 @@ const Home: NextPage = () => {
                                         setMessage('');
                                     }
                                 }}
-                                sx={{
-                                    backgroundColor: '#353535',
-                                    borderRadius: '15px',
-                                    ['& fieldset']: { borderRadius: '15px' },
-                                }}
                             />
                             <IconButton
                                 disableRipple
@@ -193,14 +140,9 @@ const Home: NextPage = () => {
                             >
                                 <Send />
                             </IconButton>
-                        </Paper>
+                        </InputPaper>
                         <RightDrawer widthMatch={widthMatch} />
-                        <SpeedDial
-                            ariaLabel="Add new"
-                            sx={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: 1201 }}
-                            color="primary"
-                            icon={<SpeedDialIcon />}
-                        >
+                        <StyledSpeedDial ariaLabel="Add new" color="primary" icon={<SpeedDialIcon />}>
                             <SpeedDialAction
                                 onClick={() => dispatch(setModalState('create-room'))}
                                 key="create room"
@@ -213,7 +155,7 @@ const Home: NextPage = () => {
                                 icon={<PersonAdd />}
                                 tooltipTitle="Add a friend"
                             />
-                        </SpeedDial>
+                        </StyledSpeedDial>
                     </Box>
                 </Box>
             )}

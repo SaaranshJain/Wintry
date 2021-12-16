@@ -5,14 +5,9 @@ import { ExpandMore } from '@mui/icons-material';
 import {
     Toolbar,
     SwipeableDrawer,
-    Drawer,
-    Accordion,
     AccordionSummary,
     Typography,
-    AccordionDetails,
     List,
-    ListItem,
-    Avatar,
     ListItemAvatar,
     ListItemText,
     Badge,
@@ -21,39 +16,37 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Member, OutgoingDataRoomUsers } from '@/pages/api/room-users';
+import {
+    AccordionListItem,
+    FullWidthAccordion,
+    PaddedAccordionDetails,
+    RightDrawerOutline,
+    StyledAvatarRightDrawer,
+} from './helpers';
 
 const RightDrawerContent: React.FC = () => {
     const { currentChat, loading } = useSelector<State, HomePageState>(state => state.homePage);
     const [members, setMembers] = React.useState<Member[]>([]);
 
     React.useEffect(() => {
-        !loading ? axios.post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat }).then(res => {
-            setMembers(res.data.members);
-        }) : null;
+        if (!loading) {
+            axios.post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat }).then(res => {
+                setMembers(res.data.members);
+            });
+        }
     }, [currentChat, loading]);
 
     return (
         <>
             <Toolbar />
-            <Accordion sx={{ width: 240 }} elevation={3} disableGutters>
+            <FullWidthAccordion elevation={3} disableGutters>
                 <AccordionSummary expandIcon={<ExpandMore />}>
                     <Typography>{currentChat === 'omnipresent' ? 'Commands' : 'Online'}</Typography>
                 </AccordionSummary>
-                <AccordionDetails sx={{ padding: '0.5rem' }}>
+                <PaddedAccordionDetails>
                     <List>
                         {members.map(member => (
-                            <ListItem
-                                key={member.id}
-                                button
-                                sx={{
-                                    borderRadius: '15px',
-                                    padding: '0.5rem',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    marginBottom: '0.5rem',
-                                    [':hover']: { backgroundColor: theme => theme.palette.primary.dark },
-                                }}
-                            >
+                            <AccordionListItem key={member.id}>
                                 <ListItemAvatar>
                                     <Badge
                                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -61,27 +54,20 @@ const RightDrawerContent: React.FC = () => {
                                         color="secondary"
                                         overlap="circular"
                                     >
-                                        <Avatar
-                                            src={member.pfp}
-                                            sx={
-                                                member.pfp
-                                                    ? {}
-                                                    : { backgroundColor: theme => theme.palette.primary.light }
-                                            }
-                                        >
+                                        <StyledAvatarRightDrawer src={member.pfp} pfp={!!member.pfp}>
                                             {member.name
                                                 .split(' ')
                                                 .reduce((a, v) => a + v[0], '')
                                                 .slice(0, 2)}
-                                        </Avatar>
+                                        </StyledAvatarRightDrawer>
                                     </Badge>
                                 </ListItemAvatar>
                                 <ListItemText primary={member.name} />
-                            </ListItem>
+                            </AccordionListItem>
                         ))}
                     </List>
-                </AccordionDetails>
-            </Accordion>
+                </PaddedAccordionDetails>
+            </FullWidthAccordion>
         </>
     );
 };
@@ -105,14 +91,9 @@ const RightDrawer: React.FC<{ widthMatch: boolean }> = ({ widthMatch }) => {
     }
 
     return (
-        <Drawer
-            variant="permanent"
-            sx={{ width: '72', [`& .MuiDrawer-paper`]: { boxSizing: 'border-box' } }}
-            PaperProps={{ elevation: 1 }}
-            anchor="right"
-        >
+        <RightDrawerOutline variant="permanent" PaperProps={{ elevation: 1 }} anchor="right">
             <RightDrawerContent />
-        </Drawer>
+        </RightDrawerOutline>
     );
 };
 

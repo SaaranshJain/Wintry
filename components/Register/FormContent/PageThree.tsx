@@ -21,7 +21,7 @@ const PfpWithRemoveButton: React.FC = () => {
                 </IconButton>
             }
         >
-            <Avatar src={URL.createObjectURL(pfp)} />
+            <Avatar src={pfp ? URL.createObjectURL(pfp) : undefined} />
         </Badge>
     );
 };

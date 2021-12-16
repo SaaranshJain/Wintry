@@ -6,6 +6,7 @@ import { AppBar, Toolbar, IconButton, Typography, useMediaQuery } from '@mui/mat
 import json2mq from 'json2mq';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ElevatedAppbar } from './helpers';
 
 const Navbar: React.FC = () => {
     const { leftDrawerOpen, rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
@@ -18,7 +19,7 @@ const Navbar: React.FC = () => {
     );
 
     return (
-        <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
+        <ElevatedAppbar position="fixed">
             <Toolbar>
                 {!widthMatch && (
                     <IconButton
@@ -38,14 +39,13 @@ const Navbar: React.FC = () => {
                     <IconButton
                         color="inherit"
                         aria-label="open right drawer"
-                        // sx={{ position: 'absolute', right: '1rem' }}
                         onClick={() => (rightDrawerOpen ? dispatch(closeRightDrawer()) : dispatch(openRightDrawer()))}
                     >
                         <People />
                     </IconButton>
                 )}
             </Toolbar>
-        </AppBar>
+        </ElevatedAppbar>
     );
 };
 

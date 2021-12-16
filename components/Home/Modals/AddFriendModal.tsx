@@ -2,10 +2,11 @@ import { OutgoingDataGetUsers } from '@/pages/api/get-users';
 import { setModalState } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';
-import { Autocomplete, Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AddFriendModalOutline, GridBox, ModalTitle, SendButton } from './helpers';
 
 interface Option {
     label: string;
@@ -20,31 +21,17 @@ const AddFriendModal: React.FC = () => {
     const autocompleteRef = React.useRef<any>();
 
     return (
-        <Modal
-            sx={{
-                position: 'fixed',
-                left: '30vw',
-                right: '30vw',
-                top: '30vh',
-                bottom: '30vh',
-                backgroundColor: '#353535',
-                padding: '2.5rem',
-                borderRadius: '15px',
-                minWidth: 240,
-            }}
-            open={modalState === 'add-friend'}
-            onClose={() => dispatch(setModalState('closed'))}
-        >
-            <Box sx={{ display: 'grid' }}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center', mb: 3 }}>
+        <AddFriendModalOutline open={modalState === 'add-friend'} onClose={() => dispatch(setModalState('closed'))}>
+            <GridBox>
+                <ModalTitle id="modal-modal-title" variant="h6">
                     Add a friend
-                </Typography>
+                </ModalTitle>
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     options={options}
                     ref={autocompleteRef}
-                    onInputChange={(ev, value) => setFriendUsername(value)}
+                    onInputChange={(_, value) => setFriendUsername(value)}
                     renderInput={params => (
                         <TextField
                             {...params}
@@ -63,7 +50,7 @@ const AddFriendModal: React.FC = () => {
                         />
                     )}
                 />
-                <Button
+                <SendButton
                     onClick={async () => {
                         const res = await axios.post('/api/send-friend-request', {
                             currentUser: id,
@@ -71,12 +58,11 @@ const AddFriendModal: React.FC = () => {
                         });
                     }}
                     variant="outlined"
-                    sx={{ placeSelf: 'center', mt: 5 }}
                 >
                     Send!
-                </Button>
-            </Box>
-        </Modal>
+                </SendButton>
+            </GridBox>
+        </AddFriendModalOutline>
     );
 };
 
