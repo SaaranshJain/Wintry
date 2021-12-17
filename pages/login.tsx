@@ -1,21 +1,22 @@
+import type { NextPage } from 'next';
+import type { OutgoingDataLogin } from './api/login';
+
 import {
     Button,
     Dialog,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    IconButton,
     Paper,
     TextField,
 } from '@mui/material';
-import type { NextPage } from 'next';
-import styles from '@/styles/Login.module.scss';
-import React from 'react';
-import axios from 'axios';
-import { OutgoingDataLogin } from './api/login';
 import { useRouter } from 'next/router';
 import { Close } from '@mui/icons-material';
 import { DialogIconButton } from '@/components/Register/Dialog/helpers';
+
+import styles from '@/styles/Login.module.scss';
+import React from 'react';
+import axios from 'axios';
 
 const Login: NextPage = () => {
     const [email, setEmail] = React.useState('');

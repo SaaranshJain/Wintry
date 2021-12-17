@@ -1,18 +1,20 @@
-import { Button, Paper, Step, StepLabel, Stepper } from '@mui/material';
 import type { NextPage } from 'next';
-import styles from '@/styles/Register.module.scss';
-import React from 'react';
+import type { RegisterPageState } from '@/redux/registerPage/reducer';
+import type { OutgoingDataRegister } from './api/register';
+import type { OutgoingDataCheckEmail } from './api/check-email';
+import type { OutgoingDataVerifyOTP } from './api/verify-otp';
+
+import { Button, Paper, Step, StepLabel, Stepper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { RegisterPageState } from '@/redux/registerPage/reducer';
-import RegisterPageDialog from '@/components/Register/Dialog';
-import FormContent from '@/components/Register/FormContent';
-import axios from 'axios';
-import { OutgoingDataRegister } from './api/register';
 import { useRouter } from 'next/router';
 import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
-import { OutgoingDataCheckEmail } from './api/check-email';
-import { OutgoingDataVerifyOTP } from './api/verify-otp';
+
+import styles from '@/styles/Register.module.scss';
+import React from 'react';
+import RegisterPageDialog from '@/components/Register/Dialog';
+import FormContent from '@/components/Register/FormContent';
+import axios from 'axios';
 
 const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
 
