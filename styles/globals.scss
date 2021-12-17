@@ -17,6 +17,17 @@ a {
 
 * {
     box-sizing: border-box;
+
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 8px;
+        background-color: #12121200;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: hsl(0, 0%, 35%);
+        border-radius: 25px;
+    }
 }
 
 input {
