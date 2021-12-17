@@ -28,6 +28,7 @@ logs
 temp-email-verify.json
 
 # local env files
+.env
 .env.*
 
 # vercel
