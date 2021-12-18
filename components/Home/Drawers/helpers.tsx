@@ -7,12 +7,10 @@ import {
     AvatarProps,
     Drawer,
     DrawerProps,
-    ListItem,
     ListItemButton,
     ListItemButtonProps,
     ListItemIcon,
     ListItemIconProps,
-    ListItemProps,
     styled,
 } from '@mui/material';
 

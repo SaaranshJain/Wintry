@@ -4,16 +4,17 @@ import type { OutgoingDataRegister } from './api/register';
 import type { OutgoingDataCheckEmail } from './api/check-email';
 import type { OutgoingDataVerifyOTP } from './api/verify-otp';
 
-import { Button, Paper, Step, StepLabel, Stepper } from '@mui/material';
+import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
+import { ContainerSection, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
+import { FooterPaperRegister } from '@/components/Auth/Register/helpers';
 
-import styles from '@/styles/Register.module.scss';
 import React from 'react';
-import RegisterPageDialog from '@/components/Register/Dialog';
-import FormContent from '@/components/Register/FormContent';
+import RegisterPageDialog from '@/components/Auth/Register/Dialog';
+import FormContent from '@/components/Auth/Register/FormContent';
 import axios from 'axios';
 
 const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
@@ -91,7 +92,7 @@ const Register: NextPage = () => {
         }
     };
 
-    const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (ev: React.FormEvent<HTMLDivElement> & React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
 
         const body = new FormData();
@@ -113,8 +114,8 @@ const Register: NextPage = () => {
     };
 
     return (
-        <section className={styles['container']}>
-            <Paper component="form" elevation={1} onSubmit={handleSubmit}>
+        <ContainerSection component="section" elevation={0}>
+            <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
                 <Stepper activeStep={activeStep}>
                     {steps.map((label, index) => {
                         return (
@@ -124,20 +125,20 @@ const Register: NextPage = () => {
                         );
                     })}
                 </Stepper>
-                <section>
+                <InnerSectionPaper component="section">
                     <RegisterPageDialog />
                     <FormContent />
-                </section>
-                <footer>
-                    <Button onClick={handlePreviousStep} disabled={activeStep === 0}>
+                </InnerSectionPaper>
+                <FooterPaperRegister component="footer">
+                    <Button sx={{ marginRight: 'auto' }} onClick={handlePreviousStep} disabled={activeStep === 0}>
                         Back
                     </Button>
-                    <Button type="submit" onClick={handleNextStep}>
+                    <Button sx={{ marginLeft: 'auto' }} type="submit" onClick={handleNextStep}>
                         {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
                     </Button>
-                </footer>
-            </Paper>
-        </section>
+                </FooterPaperRegister>
+            </FormPaper>
+        </ContainerSection>
     );
 };
 

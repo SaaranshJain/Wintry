@@ -1,20 +1,13 @@
 import type { NextPage } from 'next';
 import type { OutgoingDataLogin } from './api/login';
 
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Paper,
-    TextField,
-} from '@mui/material';
+import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Close } from '@mui/icons-material';
-import { DialogIconButton } from '@/components/Register/Dialog/helpers';
+import { DialogIconButton } from '@/components/Auth/Register/Dialog/helpers';
+import { ContainerSection, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
+import { FooterPaperLogin } from '@/components/Auth/Login/helpers';
 
-import styles from '@/styles/Login.module.scss';
 import React from 'react';
 import axios from 'axios';
 
@@ -25,7 +18,7 @@ const Login: NextPage = () => {
     const [dialogMsg, setDialogMsg] = React.useState('');
     const router = useRouter();
 
-    const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (ev: React.FormEvent<HTMLDivElement> | React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
 
         const {
@@ -49,9 +42,9 @@ const Login: NextPage = () => {
     }, [router]);
 
     return (
-        <section className={styles['container']}>
-            <Paper component="form" elevation={1} onSubmit={handleSubmit}>
-                <section>
+        <ContainerSection component="section" elevation={0}>
+            <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
+                <InnerSectionPaper component="section">
                     <Dialog open={dialogOpen}>
                         <DialogTitle>
                             Error
@@ -81,12 +74,14 @@ const Login: NextPage = () => {
                         color="primary"
                         label="Password"
                     />
-                </section>
-                <footer>
-                    <Button type="submit">Submit</Button>
-                </footer>
-            </Paper>
-        </section>
+                </InnerSectionPaper>
+                <FooterPaperLogin component="footer">
+                    <Button sx={{ marginLeft: 'auto' }} type="submit">
+                        Submit
+                    </Button>
+                </FooterPaperLogin>
+            </FormPaper>
+        </ContainerSection>
     );
 };
 
