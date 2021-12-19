@@ -17,8 +17,8 @@ const handler: PostRequestHandler<{}, {}> = (req, res) => {
 
         io.on('connection', socket => {
             socket.on('sendMessage', (message: string) => {
-                io.emit("receiveMessage", message)
-            })
+                io.emit('receiveMessage', message);
+            });
         });
     }
 

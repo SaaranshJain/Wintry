@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { readFile, writeFile } from 'fs/promises';
 import { Server as NetServer, Socket } from 'net';
 import { Server as SocketIOServer } from 'socket.io';
-import { PaperProps, PaperTypeMap } from '@mui/material';
+import { PaperProps } from '@mui/material';
 
 export interface ApiRequest<IncomingData> extends NextApiRequest {
     body: IncomingData;

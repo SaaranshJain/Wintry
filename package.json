@@ -2,7 +2,7 @@
     "name": "omnitest",
     "private": true,
     "scripts": {
-        "setup_env":"sh setup.sh",
+        "setup_env": "sh setup.sh",
         "dev": "next dev",
         "build": "next build",
         "start": "next start",

@@ -18,7 +18,6 @@ const AddFriendModal: React.FC = () => {
 
     const [friendUsername, setFriendUsername] = React.useState('');
     const [options, setOptions] = React.useState<Option[]>([]);
-    const autocompleteRef = React.useRef<any>();
 
     return (
         <AddFriendModalOutline open={modalState === 'add-friend'} onClose={() => dispatch(setModalState('closed'))}>
@@ -30,7 +29,6 @@ const AddFriendModal: React.FC = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={options}
-                    ref={autocompleteRef}
                     onInputChange={(_, value) => setFriendUsername(value)}
                     renderInput={params => (
                         <TextField
@@ -43,7 +41,6 @@ const AddFriendModal: React.FC = () => {
                                         username: friendUsername,
                                     });
                                     setOptions(res.data.options);
-                                    console.log(options);
                                 }
                             }}
                             label="Username"

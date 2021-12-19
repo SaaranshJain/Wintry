@@ -28,7 +28,7 @@ export const GridBox = styled(Box)<BoxProps>(() => {
     return { display: 'grid' };
 });
 
-export const ModalTitle = styled(Typography)<TypographyProps<"h6">>(() => {
+export const ModalTitle = styled(Typography)<TypographyProps<'h6'>>(() => {
     return { textAlign: 'center', marginBottom: '1rem' };
 });
 
