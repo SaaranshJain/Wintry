@@ -24,7 +24,10 @@ setdb.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-logs
+logs/*
+!logs/.gitkeep
+
+
 temp-email-verify.json
 
 # local env files
@@ -38,4 +41,5 @@ temp-email-verify.json
 *.tsbuildinfo
 
 # public 
-public/media/
+public/media/*/*
+!public/media/*/.gitkeep
