@@ -1,14 +1,10 @@
+import { aspectRatioMediaQuery } from '@/helpers';
 import { Message } from '@/pages/api/get-messages';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, useMediaQuery } from '@mui/material';
-import json2mq from 'json2mq';
 import React from 'react';
 
 const MessagesList: React.FC<{ messages: Message[] }> = ({ messages }) => {
-    const widthMatch = useMediaQuery(
-        json2mq({
-            minAspectRatio: '1/1',
-        })
-    );
+    const widthMatch = useMediaQuery(aspectRatioMediaQuery);
 
     return (
         <List

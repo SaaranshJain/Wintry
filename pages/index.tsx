@@ -19,10 +19,10 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { PeopleAlt, PersonAdd, Send } from '@mui/icons-material';
 import { InputPaper, StyledSpeedDial, TextFieldInput } from '@/components/Home/helpers';
+import { aspectRatioMediaQuery } from '@/helpers';
 
 import axios from 'axios';
 import React from 'react';
-import json2mq from 'json2mq';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
 import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 import Navbar from '@/components/Home/Navbar';
@@ -32,8 +32,8 @@ import MessagesList from '@/components/Home/MessageList';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 
-const sendMessage = (socket: Socket, msg: string) => {
-    socket.emit('sendMessage', msg);
+const sendMessage = (sock: Socket, msg: string) => {
+    sock.emit('sendMessage', msg);
 };
 
 let socket: Socket;
@@ -42,11 +42,7 @@ const Home: NextPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { currentChat, loading } = useSelector<State, HomePageState>(state => state.homePage);
-    const widthMatch = useMediaQuery(
-        json2mq({
-            minAspectRatio: '1/1',
-        })
-    );
+    const widthMatch = useMediaQuery(aspectRatioMediaQuery);
 
     const [messages, setMessages] = React.useState<Message[]>([]);
     const [message, setMessage] = React.useState('');
@@ -85,8 +81,8 @@ const Home: NextPage = () => {
 
             socket.on('connect', () => {});
 
-            socket.on('receiveMessage', (message: string) => {
-                setMessages(msgs => [...msgs, { author: 'tinmanfall', pfp: '', content: message }]);
+            socket.on('receiveMessage', (msg: string) => {
+                setMessages(msgs => [...msgs, { author: 'tinmanfall', pfp: '', content: msg }]);
             });
 
             return () => {
