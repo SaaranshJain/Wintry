@@ -17,7 +17,7 @@ export interface OutgoingDataCheckEmail {
 const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail> = async (req, res) => {
     if (req.method !== 'POST') {
         res.status(405); // method not allowed
-        return await writeToLog(
+        return writeToLog(
             'register',
             `Request sent to /api/check-email using unallowed method : ${req.method}\n`
         );
@@ -27,14 +27,7 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
 
     if (!omnipresentEmailPass) {
         res.status(500).json({ allow: false });
-        return await writeToLog('register', 'Omnipresent email password not set up in environment variables');
-    }
-
-    const { email } = req.body;
-
-    if (await User.findOne({ where: { email: email } })) {
-        res.status(200).json({ allow: false });
-        return await writeToLog('register', 'User tried registering with a pre-existing email');
+        return writeToLog('register', 'Omnipresent email password not set up in environment variables');
     }
 
     const transport = nodemailer.createTransport({
@@ -45,10 +38,18 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
         },
     });
 
+    const { email } = req.body;
+
     try {
+        if (await User.findOne({ where: { email: email } })) {
+            res.status(200).json({ allow: false });
+            return writeToLog('register', 'User tried registering with a pre-existing email');
+        }
+
         const data = JSON.parse(await readFile('./temp-email-verify.json', { encoding: 'utf-8' }));
         const otp = Math.floor(Math.random() * 1000000);
         data[email] = otp;
+        
         await writeFile('./temp-email-verify.json', JSON.stringify(data));
 
         await transport.sendMail({

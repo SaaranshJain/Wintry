@@ -13,7 +13,7 @@ export interface OutgoingDataVerifyOTP {
 const handler: PostRequestHandler<IncomingDataVerifyOTP, OutgoingDataVerifyOTP> = async (req, res) => {
     if (req.method !== 'POST') {
         res.status(405);
-        await writeToLog('register', `Request sent to /api/verify-otp using unallowed method : ${req.method}\n`);
+        writeToLog('register', `Request sent to /api/verify-otp using unallowed method : ${req.method}\n`);
     }
 
     const { email, otp } = req.body;
@@ -32,7 +32,7 @@ const handler: PostRequestHandler<IncomingDataVerifyOTP, OutgoingDataVerifyOTP> 
         res.status(200).json({ verified: true });
     } catch (err: any) {
         res.status(500).json({ verified: false });
-        await writeToLog('register', err.message);
+        writeToLog('register', err.message);
     }
 };
 

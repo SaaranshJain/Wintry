@@ -1,5 +1,5 @@
 import { User } from '@/db';
-import { PostRequestHandler } from '@/helpers';
+import { PostRequestHandler, writeToLog } from '@/helpers';
 import { config as configEnv } from 'dotenv';
 import jwt from 'jsonwebtoken';
 
@@ -12,7 +12,7 @@ interface IncomingDataLogin {
 
 interface OutgoingDataLoginFail {
     token: null;
-    message: 'User not found' | 'Passwords do not match';
+    message: 'User not found' | 'Passwords do not match' | 'Something went wrong';
 }
 
 interface OutgoingDataLoginSuccess {
@@ -23,21 +23,37 @@ interface OutgoingDataLoginSuccess {
 export type OutgoingDataLogin = OutgoingDataLoginFail | OutgoingDataLoginSuccess;
 
 const handler: PostRequestHandler<IncomingDataLogin, OutgoingDataLogin> = async (req, res) => {
+    if (req.method !== 'POST') {
+        res.status(405); // method not allowed
+        return writeToLog('login', `Request sent to /api/login using unallowed method : ${req.method}\n`);
+    }
+
+    const secret = process.env['SECRET'];
+
+    if (!secret) {
+        res.status(500).json({ token: null, message: 'Something went wrong' });
+        return writeToLog('login', 'JWT secret not set in environment variables');
+    }
+
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    try {
+        const user = await User.findOne({ where: { email } });
 
-    if (!user) return res.status(400).send({ token: null, message: 'User not found' });
-    if (user.password !== password) return res.status(400).send({ token: null, message: 'Passwords do not match' });
+        if (!user) {
+            return res.status(400).json({ token: null, message: 'User not found' });
+        }
 
-    const token = jwt.sign(
-        {
-            id: user.id,
-        },
-        process.env['SECRET'] || ''
-    );
+        if (user.password !== password) {
+            return res.status(400).json({ token: null, message: 'Passwords do not match' });
+        }
 
-    res.status(200).json({ token, message: 'Login successful' });
+        const token = jwt.sign({ id: user.id }, secret);
+
+        res.status(200).json({ token, message: 'Login successful' });
+    } catch (err: any) {
+        res.status(500).json({ token: null, message: 'Something went wrong' });
+    }
 };
 
 export default handler;

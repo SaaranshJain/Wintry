@@ -1,4 +1,4 @@
-import { aspectRatioMediaQuery } from '@/helpers';
+import { aspectRatioMediaQuery } from '@/components/helpers';
 import { Message } from '@/pages/api/get-messages';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, useMediaQuery } from '@mui/material';
 import React from 'react';

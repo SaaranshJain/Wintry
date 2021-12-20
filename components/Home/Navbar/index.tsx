@@ -1,4 +1,4 @@
-import { aspectRatioMediaQuery } from '@/helpers';
+import { aspectRatioMediaQuery } from '@/components/helpers';
 import { closeLeftDrawer, openLeftDrawer, closeRightDrawer, openRightDrawer } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';

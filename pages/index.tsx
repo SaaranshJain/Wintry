@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { PeopleAlt, PersonAdd, Send } from '@mui/icons-material';
 import { InputPaper, StyledSpeedDial, TextFieldInput } from '@/components/Home/helpers';
-import { aspectRatioMediaQuery } from '@/helpers';
+import { aspectRatioMediaQuery } from '@/components/helpers';
 
 import axios from 'axios';
 import React from 'react';
