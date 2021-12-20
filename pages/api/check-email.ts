@@ -1,7 +1,6 @@
 import { User } from '@/db';
-import { PostRequestHandler, writeToLog } from '@/helpers';
+import { PostRequestHandler, readOtpFile, writeOtpFile, writeToLog } from '@/helpers';
 import { config as configEnv } from 'dotenv';
-import { readFile, writeFile } from 'fs/promises';
 import nodemailer from 'nodemailer';
 
 configEnv();
@@ -17,10 +16,7 @@ export interface OutgoingDataCheckEmail {
 const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail> = async (req, res) => {
     if (req.method !== 'POST') {
         res.status(405); // method not allowed
-        return writeToLog(
-            'register',
-            `Request sent to /api/check-email using unallowed method : ${req.method}\n`
-        );
+        return writeToLog('register', `Request sent to /api/check-email using unallowed method : ${req.method}\n`);
     }
 
     const omnipresentEmailPass = process.env['EMAIL_PASS'];
@@ -46,11 +42,11 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
             return writeToLog('register', 'User tried registering with a pre-existing email');
         }
 
-        const data = JSON.parse(await readFile(process.env.TEMP_EMAIL_FILE || '', { encoding: 'utf-8' }));
+        const data = await readOtpFile();
         const otp = Math.floor(Math.random() * 1000000);
         data[email] = otp;
 
-        await writeFile(process.env.TEMP_EMAIL_FILE || '', JSON.stringify(data));
+        await writeOtpFile(data);
 
         await transport.sendMail({
             to: email,

@@ -27,3 +27,16 @@ export const writeToLog = async (route: string, logmsg: string) => {
 };
 
 export type PaperPropsWithComponent<D extends React.ElementType<any> = 'div'> = PaperProps<D> & { component: string };
+
+export const readOtpFile = async (): Promise<{ [email: string]: number }> => {
+    try {
+        return JSON.parse(await readFile(process.env.TEMP_EMAIL_FILE || '', { encoding: 'utf-8' }));
+    } catch {
+        await writeOtpFile({});
+        return {};
+    }
+};
+
+export const writeOtpFile = async (data: { [email: string]: number }) => {
+    await writeFile(process.env.TEMP_EMAIL_FILE || '', JSON.stringify(data));
+};
