@@ -19,7 +19,7 @@ const handler: PostRequestHandler<IncomingDataVerifyOTP, OutgoingDataVerifyOTP> 
     const { email, otp } = req.body;
 
     try {
-        const data = JSON.parse(await readFile('./temp-email-verify.json', { encoding: 'utf-8' }));
+        const data = JSON.parse(await readFile(process.env.TEMP_EMAIL_FILE || '', { encoding: 'utf-8' }));
 
         if (data[email] !== parseInt(otp)) {
             res.status(400).json({ verified: false });
@@ -27,7 +27,7 @@ const handler: PostRequestHandler<IncomingDataVerifyOTP, OutgoingDataVerifyOTP> 
         }
 
         delete data[email];
-        await writeFile('./temp-email-verify.json', JSON.stringify(data));
+        await writeFile(process.env.TEMP_EMAIL_FILE || '', JSON.stringify(data));
 
         res.status(200).json({ verified: true });
     } catch (err: any) {

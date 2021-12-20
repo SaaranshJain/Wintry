@@ -46,11 +46,11 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
             return writeToLog('register', 'User tried registering with a pre-existing email');
         }
 
-        const data = JSON.parse(await readFile('./temp-email-verify.json', { encoding: 'utf-8' }));
+        const data = JSON.parse(await readFile(process.env.TEMP_EMAIL_FILE || '', { encoding: 'utf-8' }));
         const otp = Math.floor(Math.random() * 1000000);
         data[email] = otp;
-        
-        await writeFile('./temp-email-verify.json', JSON.stringify(data));
+
+        await writeFile(process.env.TEMP_EMAIL_FILE || '', JSON.stringify(data));
 
         await transport.sendMail({
             to: email,

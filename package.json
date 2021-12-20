@@ -2,10 +2,9 @@
     "name": "omnitest",
     "private": true,
     "scripts": {
-        "setup_env": "sh setup.sh",
-        "dev": "next dev",
+        "dev": "TEMP_EMAIL_FILE=$(mktemp) next dev",
         "build": "next build",
-        "start": "next start",
+        "start": "TEMP_EMAIL_FILE=$(mktemp) next start",
         "pretty": "npx prettier --write .",
         "lint": "next lint"
     },
