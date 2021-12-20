@@ -39,5 +39,6 @@ logs/*
 *.tsbuildinfo
 
 # public 
-public/media/*/*
+public/media/*
 !public/media/*/.gitkeep
+!public/media/assets

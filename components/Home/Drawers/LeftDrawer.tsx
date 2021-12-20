@@ -39,7 +39,7 @@ const LeftDrawerContent: React.FC = () => {
                 <List>
                     <LeftDrawerListItem name="Omnipresent" chatId="omnipresent">
                         <ListIconWithMinWidth>
-                            <StyledAvatarLeftDrawer pfp src="/media/pfp/Omnipresent.png" alt="Omnipresent" />
+                            <StyledAvatarLeftDrawer pfp src="/media/assets/Omnipresent.png" alt="Omnipresent" />
                         </ListIconWithMinWidth>
                     </LeftDrawerListItem>
                 </List>
