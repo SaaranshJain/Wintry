@@ -9,8 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
-import { ContainerSection, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
-import { FooterPaperRegister } from '@/components/Auth/Register/helpers';
+import { ContainerSection, FooterPaper, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
 
 import React from 'react';
 import RegisterPageDialog from '@/components/Auth/Register/Dialog';
@@ -129,14 +128,19 @@ const Register: NextPage = () => {
                     <RegisterPageDialog />
                     <FormContent />
                 </InnerSectionPaper>
-                <FooterPaperRegister component="footer">
-                    <Button sx={{ marginRight: 'auto' }} onClick={handlePreviousStep} disabled={activeStep === 0}>
+                <FooterPaper component="footer">
+                    <Button
+                        variant="outlined"
+                        sx={{ marginRight: 'auto' }}
+                        onClick={handlePreviousStep}
+                        disabled={activeStep === 0}
+                    >
                         Back
                     </Button>
-                    <Button sx={{ marginLeft: 'auto' }} type="submit" onClick={handleNextStep}>
+                    <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit" onClick={handleNextStep}>
                         {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
                     </Button>
-                </FooterPaperRegister>
+                </FooterPaper>
             </FormPaper>
         </ContainerSection>
     );

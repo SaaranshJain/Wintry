@@ -5,8 +5,7 @@ import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextFiel
 import { useRouter } from 'next/router';
 import { Close } from '@mui/icons-material';
 import { DialogIconButton } from '@/components/Auth/Register/Dialog/helpers';
-import { ContainerSection, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
-import { FooterPaperLogin } from '@/components/Auth/Login/helpers';
+import { ContainerSection, FooterPaper, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
 
 import React from 'react';
 import axios from 'axios';
@@ -75,11 +74,14 @@ const Login: NextPage = () => {
                         label="Password"
                     />
                 </InnerSectionPaper>
-                <FooterPaperLogin component="footer">
-                    <Button sx={{ marginLeft: 'auto' }} type="submit">
+                <FooterPaper component="footer">
+                    <Button variant="outlined" sx={{ marginRight: 'auto' }} onClick={() => router.push('/register')}>
+                        Register Instead
+                    </Button>
+                    <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit">
                         Submit
                     </Button>
-                </FooterPaperLogin>
+                </FooterPaper>
             </FormPaper>
         </ContainerSection>
     );
