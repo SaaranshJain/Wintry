@@ -2,11 +2,13 @@ import { User } from '@/db';
 import { PostRequestHandler, readOtpFile, writeOtpFile, writeToLog } from '@/helpers';
 import { config as configEnv } from 'dotenv';
 import nodemailer from 'nodemailer';
+import { Op } from 'sequelize';
 
 configEnv();
 
 interface IncomingDataCheckEmail {
     email: string;
+    username: string;
 }
 
 export interface OutgoingDataCheckEmail {
@@ -34,12 +36,12 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
         },
     });
 
-    const { email } = req.body;
+    const { email, username } = req.body;
 
     try {
-        if (await User.findOne({ where: { email: email } })) {
+        if (await User.findOne({ where: { [Op.or]: [{ email }, { username }] } })) {
             res.status(200).json({ allow: false });
-            return writeToLog('register', 'User tried registering with a pre-existing email');
+            return writeToLog('register', 'User tried registering with a pre-existing email / username');
         }
 
         const data = await readOtpFile();

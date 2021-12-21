@@ -19,7 +19,7 @@ import axios from 'axios';
 const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
 
 const Register: NextPage = () => {
-    const { about, activeStep, confirmPassword, email, password, pfp, username, code } = useSelector<
+    const { about, activeStep, confirmPassword, displayName, email, password, pfp, username, code } = useSelector<
         State,
         RegisterPageState
     >(state => state.registerPage);
@@ -49,11 +49,11 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('The passwords do not match'));
             }
 
-            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`, { email });
+            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`, { email, username });
 
             if (!res.data.allow) {
                 dispatch(showDialog());
-                return dispatch(setDialogMsg('That email is taken'));
+                return dispatch(setDialogMsg('That email / username is taken'));
             }
 
             return dispatch(nextStep());
@@ -98,6 +98,7 @@ const Register: NextPage = () => {
         body.append('email', email);
         body.append('password', password);
         body.append('username', username);
+        body.append('displayName', displayName);
         pfp && body.append('pfp', pfp);
         body.append('about', about);
 

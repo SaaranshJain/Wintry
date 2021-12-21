@@ -1,16 +1,26 @@
-import { setEmail, setPassword, setConfirmPassword } from '@/redux/registerPage/actions';
+import { setEmail, setPassword, setConfirmPassword, setUsername } from '@/redux/registerPage/actions';
 import { RegisterPageState } from '@/redux/registerPage/reducer';
 import { State } from '@/redux/store';
 import { TextField } from '@mui/material';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import React from 'react';
+
 const PageOne: React.FC = () => {
-    const { email, password, confirmPassword } = useSelector<State, RegisterPageState>(state => state.registerPage);
+    const { email, password, confirmPassword, username } = useSelector<State, RegisterPageState>(state => state.registerPage);
     const dispatch = useDispatch();
 
     return (
         <>
+            <TextField
+                required
+                value={username}
+                onChange={ev => dispatch(setUsername(ev.target.value))}
+                type="text"
+                fullWidth
+                color="primary"
+                label="Username"
+            />
             <TextField
                 required
                 value={email}

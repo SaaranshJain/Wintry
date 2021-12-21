@@ -1,11 +1,11 @@
-import { clearPfp, setAbout, setPfp, setUsername } from '@/redux/registerPage/actions';
+import { clearPfp, setAbout, setDisplayName, setPfp } from '@/redux/registerPage/actions';
 import { RegisterPageState } from '@/redux/registerPage/reducer';
-import { Close, AccountCircle } from '@mui/icons-material';
-import { Avatar, Badge, IconButton, TextField, Tooltip, Zoom } from '@mui/material';
-import React from 'react';
+import { Badge, TextField, Tooltip, Zoom } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from '@/styles/Register.module.scss';
 import { State } from '@/redux/store';
+import { RemovePfpIconButton, StyledAccountCircle, StyledCloseIcon, UserAvatar } from '../helpers';
+
+import React from 'react';
 
 const PfpWithRemoveButton: React.FC = () => {
     const dispatch = useDispatch();
@@ -16,12 +16,12 @@ const PfpWithRemoveButton: React.FC = () => {
             overlap="circular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             badgeContent={
-                <IconButton onClick={() => setTimeout(() => dispatch(clearPfp()), 100)}>
-                    <Close />
-                </IconButton>
+                <RemovePfpIconButton onClick={() => setTimeout(() => dispatch(clearPfp()), 100)}>
+                    <StyledCloseIcon />
+                </RemovePfpIconButton>
             }
         >
-            <Avatar src={pfp ? URL.createObjectURL(pfp) : undefined} />
+            <UserAvatar src={pfp ? URL.createObjectURL(pfp) : undefined} />
         </Badge>
     );
 };
@@ -40,14 +40,20 @@ const PfpInput: React.FC = () => {
 
     return (
         <>
-            <AccountCircle></AccountCircle>
-            <input accept="image/*" type="file" hidden onChange={handleChange} />
+            <StyledAccountCircle />
+            <input
+                accept="image/*"
+                type="file"
+                hidden
+                onChange={handleChange}
+                style={{ width: '10rem', height: '10rem', color: '#353535' }}
+            />
         </>
     );
 };
 
 const PageThree: React.FC = () => {
-    const { about, pfp, username } = useSelector<State, RegisterPageState>(state => state.registerPage);
+    const { about, displayName, pfp, username } = useSelector<State, RegisterPageState>(state => state.registerPage);
     const dispatch = useDispatch();
     const [currentLength, setCurrentLength] = React.useState(0);
 
@@ -59,15 +65,22 @@ const PageThree: React.FC = () => {
                 placement="left"
                 arrow
             >
-                <label style={{ cursor: pfp ? undefined : 'pointer' }} className={styles['profile-label']}>
+                <label
+                    style={{
+                        cursor: pfp ? undefined : 'pointer',
+                        width: '10rem',
+                        height: '10rem',
+                        alignSelf: 'center',
+                    }}
+                >
                     {pfp ? <PfpWithRemoveButton /> : <PfpInput />}
                 </label>
             </Tooltip>
 
             <TextField
                 required
-                value={username}
-                onChange={ev => dispatch(setUsername(ev.target.value))}
+                value={displayName}
+                onChange={ev => dispatch(setDisplayName(ev.target.value))}
                 type="text"
                 fullWidth
                 color="primary"
@@ -87,7 +100,7 @@ const PageThree: React.FC = () => {
                 inputProps={{ maxLength: 200 }}
                 helperText={`${currentLength} of 200`}
                 error={currentLength > 200}
-                // TODO: Fix max lines
+                maxRows={2}
             />
         </>
     );

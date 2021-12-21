@@ -37,10 +37,16 @@ const AddFriendModal: React.FC = () => {
                             fullWidth
                             onKeyPress={async ev => {
                                 if (ev.key === 'Enter') {
-                                    const res = await axios.post<OutgoingDataGetUsers>('/api/get-users', {
-                                        username: friendUsername,
-                                    });
-                                    setOptions(res.data.options);
+                                    axios
+                                        .post<OutgoingDataGetUsers>('/api/get-users', {
+                                            username: friendUsername,
+                                        })
+                                        .then(res => {
+                                            setOptions(res.data.options);
+                                        })
+                                        .catch(() => {
+                                            setOptions([]);
+                                        });
                                 }
                             }}
                             label="Username"
@@ -49,10 +55,12 @@ const AddFriendModal: React.FC = () => {
                 />
                 <SendButton
                     onClick={async () => {
-                        const res = await axios.post('/api/send-friend-request', {
-                            currentUser: id,
-                            targetUser: friendUsername,
-                        });
+                        axios
+                            .post('/api/send-friend-request', {
+                                currentUser: id,
+                                targetUser: friendUsername,
+                            })
+                            .catch(() => {});
                     }}
                     variant="outlined"
                 >

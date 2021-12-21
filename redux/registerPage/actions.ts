@@ -15,6 +15,7 @@ export enum RegisterActionWithPayload {
     SET_ABOUT = 'REGISTER_SET_ABOUT',
     SET_PFP = 'REGISTER_SET_PFP',
     SET_CODE = 'REGISTER_SET_CODE',
+    SET_DISPLAY_NAME = 'REGISTER_SET_DISPLAY_NAME',
 }
 
 interface ActionWithoutPayload {
@@ -113,3 +114,10 @@ export const setCode = (code: string): Action => {
         payload: code,
     };
 };
+
+export const setDisplayName = (displayName: string): Action => {
+    return {
+        type: RegisterActionWithPayload.SET_DISPLAY_NAME,
+        payload: displayName
+    }
+}

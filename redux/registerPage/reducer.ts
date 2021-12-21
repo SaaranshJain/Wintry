@@ -1,28 +1,30 @@
 import { Action, RegisterActionWithPayload, RegisterActionWithoutPayload } from './actions';
 
 export interface RegisterPageState {
+    about: string;
+    activeStep: number;
+    confirmPassword: string;
+    dialogMsg: string;
+    dialogOpen: boolean;
+    displayName: string;
     email: string;
     password: string;
-    confirmPassword: string;
-    activeStep: number;
-    dialogOpen: boolean;
-    dialogMsg: string;
-    username: string;
-    about: string;
     pfp?: File;
+    username: string;
     code: string;
 }
 
 const initialState: RegisterPageState = {
+    about: '',
+    activeStep: 0,
+    code: '',
+    confirmPassword: '',
+    dialogMsg: '',
+    dialogOpen: false,
+    displayName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    activeStep: 0,
-    dialogOpen: false,
-    dialogMsg: '',
     username: '',
-    about: '',
-    code: '',
 };
 
 const reducer = (state = initialState, action: Action): RegisterPageState => {
@@ -117,6 +119,13 @@ const reducer = (state = initialState, action: Action): RegisterPageState => {
                 ...state,
                 code: action.payload,
             };
+        }
+
+        case RegisterActionWithPayload.SET_DISPLAY_NAME: {
+            return {
+                ...state,
+                displayName: action.payload
+            }
         }
 
         default: {

@@ -30,9 +30,14 @@ const RightDrawerContent: React.FC = () => {
 
     React.useEffect(() => {
         if (!loading) {
-            axios.post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat }).then(res => {
-                setMembers(res.data.members);
-            });
+            axios
+                .post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat })
+                .then(res => {
+                    setMembers(res.data.members);
+                })
+                .catch(() => {
+                    setMembers([]);
+                });
         }
     }, [currentChat, loading]);
 

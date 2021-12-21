@@ -68,6 +68,8 @@ const Home: NextPage = () => {
                 return;
             }
 
+            throw "Not verified";
+        }).catch(() => {
             localStorage.removeItem('token');
             router.push('/login');
         });
@@ -97,7 +99,8 @@ const Home: NextPage = () => {
         if (!loading) {
             axios
                 .post<OutgoingDataGetMessages>('/api/get-messages', { id: currentChat })
-                .then(res => setMessages(res.data.messages));
+                .then(res => setMessages(res.data.messages))
+                .catch(() => setMessages([]));
         }
     }, [currentChat, loading]);
 

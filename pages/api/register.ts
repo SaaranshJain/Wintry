@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { config as configEnv } from 'dotenv';
 import { Fields, Files, IncomingForm } from 'formidable';
 import { readFile, writeFile } from 'fs/promises';
+import { Op } from 'sequelize';
 
 configEnv();
 
@@ -58,14 +59,14 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
 
     try {
         const { fields, files } = await parseForm(req);
-        const { about, email, password, username } = fields;
+        const { about, displayName, email, password, username } = fields;
 
         // checking if the user already exists
-        if (await User.findOne({ where: { email } })) {
+        if (await User.findOne({ where: { [Op.or]: [{ email }, { username }] } })) {
             res.status(400).json({ token: null });
             return writeToLog(
                 'register',
-                'User tried registering with a pre-existing email indicating that the previous check failed'
+                'User tried registering with a pre-existing email / username indicating that the previous check failed'
             );
         }
 

@@ -22,6 +22,7 @@ export const InnerSectionPaper = styled(Paper)<PaperPropsWithComponent<'section'
         display: 'flex',
         flexDirection: 'column',
         rowGap: '1rem',
+        boxShadow: 'none'
     };
 });
 
