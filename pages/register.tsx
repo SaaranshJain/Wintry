@@ -44,6 +44,11 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('One or more required fields are missing'));
             }
 
+            if (!username.match(/^[a-z]{1,32}$/g)) {
+                dispatch(showDialog());
+                return dispatch(setDialogMsg('Username does not match criteria'));
+            }
+
             if (password !== confirmPassword) {
                 dispatch(showDialog());
                 return dispatch(setDialogMsg('The passwords do not match'));

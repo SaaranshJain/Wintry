@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 
 const PageOne: React.FC = () => {
-    const { email, password, confirmPassword, username } = useSelector<State, RegisterPageState>(state => state.registerPage);
+    const { email, password, confirmPassword, username } = useSelector<State, RegisterPageState>(
+        state => state.registerPage
+    );
     const dispatch = useDispatch();
 
     return (
@@ -20,6 +22,12 @@ const PageOne: React.FC = () => {
                 fullWidth
                 color="primary"
                 label="Username"
+                error={!username.match(/^[a-z]{1,32}$/g)}
+                helperText={
+                    username.match(/^[a-z]{1,32}$/g)
+                        ? ''
+                        : 'Username must be 32 characters long. Only lowercase letters allowed'
+                }
             />
             <TextField
                 required

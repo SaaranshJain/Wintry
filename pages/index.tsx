@@ -32,17 +32,14 @@ import MessagesList from '@/components/Home/MessageList';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 
-const sendMessage = (sock: Socket, msg: string) => {
-    sock.emit('sendMessage', msg);
-};
-
-let socket: Socket;
-
 const Home: NextPage = () => {
+    let socket: Socket;
+
     const router = useRouter();
-    const dispatch = useDispatch();
-    const { currentChat, loading } = useSelector<State, HomePageState>(state => state.homePage);
     const widthMatch = useMediaQuery(aspectRatioMediaQuery);
+    
+    const dispatch = useDispatch();
+    const { loading } = useSelector<State, HomePageState>(state => state.homePage);
 
     const [messages, setMessages] = React.useState<Message[]>([]);
     const [message, setMessage] = React.useState('');
@@ -95,15 +92,6 @@ const Home: NextPage = () => {
         }
     }, [loading]);
 
-    React.useEffect(() => {
-        if (!loading) {
-            axios
-                .post<OutgoingDataGetMessages>('/api/get-messages', { id: currentChat })
-                .then(res => setMessages(res.data.messages))
-                .catch(() => setMessages([]));
-        }
-    }, [currentChat, loading]);
-
     return (
         <>
             <AddFriendModal />
@@ -124,15 +112,15 @@ const Home: NextPage = () => {
                                 onChange={ev => setMessage(ev.target.value)}
                                 onKeyDown={ev => {
                                     if (ev.key === 'Enter' && !ev.shiftKey) {
-                                        sendMessage(socket, message);
+                                        socket.emit('sendMessage', message);
                                         setMessage('');
                                     }
                                 }}
-                            />
+                                />
                             <IconButton
                                 disableRipple
                                 onClick={() => {
-                                    sendMessage(socket, message);
+                                    socket.emit('sendMessage', message);
                                     setMessage('');
                                 }}
                             >

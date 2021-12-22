@@ -44,6 +44,11 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
             return writeToLog('register', 'User tried registering with a pre-existing email / username');
         }
 
+        if (!username.match(/^[a-z]{1,32}$/g)) {
+            res.status(400).json({ allow: false });
+            return writeToLog('register', 'Username did not match criteria');
+        }
+
         const data = await readOtpFile();
         const otp = Math.floor(Math.random() * 1000000);
         data[email] = otp;

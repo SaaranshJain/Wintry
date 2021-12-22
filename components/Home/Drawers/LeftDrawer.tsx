@@ -1,70 +1,77 @@
-import { closeLeftDrawer, openLeftDrawer, setCurrentChat } from '@/redux/homePage/actions';
+import { closeLeftDrawer, openLeftDrawer } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';
-import { Toolbar, Box, List, ListItem, Divider, SwipeableDrawer, Tooltip } from '@mui/material';
-import React from 'react';
+import { Toolbar, Box, List, Divider, SwipeableDrawer, Tooltip } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { LeftDrawerOutline, ListIconWithMinWidth, StyledAvatarLeftDrawer, StyledLeftDrawerListItem } from './helpers';
 
-const LeftDrawerListItem: React.FC<{ name: string; chatId: string }> = ({ name, chatId, children }) => {
-    const { currentChat } = useSelector<State, HomePageState>(state => state.homePage);
-    const dispatch = useDispatch();
-
-    const switchChat = (chatId: string) => {
-        dispatch(setCurrentChat(chatId));
-    };
-
-    return (
-        <Tooltip title={name} placement="right">
-            <StyledLeftDrawerListItem
-                disableRipple
-                onClick={() => switchChat(chatId)}
-                disabled={currentChat === chatId}
-                style={{ opacity: 1 }}
-                selected={currentChat === chatId}
-            >
-                {children}
-            </StyledLeftDrawerListItem>
-        </Tooltip>
-    );
-};
+import React from 'react';
 
 const LeftDrawerContent: React.FC = () => {
     const { chats } = useSelector<State, HomePageState>(state => state.homePage);
+    const router = useRouter();
 
     return (
         <>
             <Toolbar />
             <Box>
                 <List>
-                    <LeftDrawerListItem name="Omnipresent" chatId="omnipresent">
-                        <ListIconWithMinWidth>
-                            <StyledAvatarLeftDrawer pfp src="/media/assets/Omnipresent.png" alt="Omnipresent" />
-                        </ListIconWithMinWidth>
-                    </LeftDrawerListItem>
+                    <Tooltip title="Omnipresent" placement="right">
+                        <StyledLeftDrawerListItem
+                            disableRipple
+                            disabled={router.pathname === '/'}
+                            style={{ opacity: 1 }}
+                            selected={router.pathname === '/'}
+                        >
+                            <ListIconWithMinWidth>
+                                <StyledAvatarLeftDrawer pfp src="/media/assets/Omnipresent.png" alt="Omnipresent" />
+                            </ListIconWithMinWidth>
+                        </StyledLeftDrawerListItem>
+                    </Tooltip>
                 </List>
                 <Divider />
                 <List>
                     {chats[0]?.map(friend => (
-                        <LeftDrawerListItem key={friend.id} name={friend.name} chatId={friend.id}>
-                            <ListIconWithMinWidth>
-                                <StyledAvatarLeftDrawer
-                                    pfp={!!friend.pfp}
-                                    src={friend.pfp || undefined}
-                                    alt={friend.name}
-                                />
-                            </ListIconWithMinWidth>
-                        </LeftDrawerListItem>
+                        <Tooltip title={friend.name} placement="right">
+                            <StyledLeftDrawerListItem
+                                disableRipple
+                                disabled={router.pathname === `/${friend.name}`}
+                                style={{ opacity: 1 }}
+                                selected={router.pathname === `/${friend.name}`}
+                                onClick={() => router.push(`/${friend.name}`)}
+                            >
+                                <ListIconWithMinWidth>
+                                    <StyledAvatarLeftDrawer
+                                        pfp={!!friend.pfp}
+                                        src={friend.pfp || undefined}
+                                        alt={friend.name}
+                                    />
+                                </ListIconWithMinWidth>
+                            </StyledLeftDrawerListItem>
+                        </Tooltip>
                     ))}
                 </List>
                 <Divider />
                 <List>
                     {chats[1]?.map(room => (
-                        <LeftDrawerListItem key={room.id} name={room.name} chatId={room.id}>
-                            <ListIconWithMinWidth>
-                                <StyledAvatarLeftDrawer pfp={!!room.pfp} src={room.pfp || undefined} alt={room.name} />
-                            </ListIconWithMinWidth>
-                        </LeftDrawerListItem>
+                        <Tooltip title={room.name} placement="right">
+                            <StyledLeftDrawerListItem
+                                disableRipple
+                                disabled={router.pathname === `/${room.id}`}
+                                style={{ opacity: 1 }}
+                                selected={router.pathname === `/${room.id}`}
+                                onClick={() => router.push(`/${room.id}`)}
+                            >
+                                <ListIconWithMinWidth>
+                                    <StyledAvatarLeftDrawer
+                                        pfp={!!room.pfp}
+                                        src={room.pfp || undefined}
+                                        alt={room.name}
+                                    />
+                                </ListIconWithMinWidth>
+                            </StyledLeftDrawerListItem>
+                        </Tooltip>
                     ))}
                 </List>
             </Box>

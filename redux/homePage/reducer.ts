@@ -9,7 +9,6 @@ export interface HomePageState {
     leftDrawerOpen: boolean;
     rightDrawerOpen: boolean;
     chats: [Chat[], Chat[]] | [];
-    currentChat: string;
     loading: boolean;
     modalState: 'closed' | 'add-friend' | 'create-room';
 }
@@ -22,7 +21,6 @@ const initialState: HomePageState = {
     leftDrawerOpen: false,
     rightDrawerOpen: false,
     chats: [],
-    currentChat: 'omnipresent',
     loading: true,
     modalState: 'closed',
 };
@@ -82,13 +80,6 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             return {
                 ...state,
                 chats: action.payload as [Chat[], Chat[]],
-            };
-        }
-
-        case HomeActionWithPayload.SET_CURRENT_CHAT: {
-            return {
-                ...state,
-                currentChat: action.payload as string,
             };
         }
 
