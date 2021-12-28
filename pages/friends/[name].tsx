@@ -1,45 +1,65 @@
-import type { HomePageState } from '@/redux/homePage/reducer';
+import type { GetServerSideProps, NextPage } from 'next';
 import type { State } from '@/redux/store';
-import type { NextPage } from 'next';
-import type { Socket } from 'socket.io-client';
-import type { MessageInterface } from './api/get-friend-messages';
+import type { HomePageState } from '@/redux/homePage/reducer';
 
-import { setModalState } from '@/redux/homePage/actions';
-import { Toolbar, Box, useMediaQuery, CssBaseline, SpeedDialAction, SpeedDialIcon, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { PeopleAlt, PersonAdd, Send } from '@mui/icons-material';
-import { InputPaper, StyledSpeedDial, TextFieldInput } from '@/components/Home/helpers';
+import { useRouter } from 'next/router';
+import { setModalState } from '@/redux/homePage/actions';
+import { Send, PeopleAlt, PersonAdd } from '@mui/icons-material';
+import { InputPaper, TextFieldInput, StyledSpeedDial } from '@/components/Home/helpers';
+import { Box, CssBaseline, Toolbar, IconButton, SpeedDialIcon, SpeedDialAction, useMediaQuery } from '@mui/material';
 import { aspectRatioMediaQuery } from '@/components/helpers';
+import { MessageInterface, OutgoingDataGetFriendMessages } from '../api/get-friend-messages';
 
 import React from 'react';
+import axios from 'axios';
+import Head from 'next/head';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
 import RightDrawer from '@/components/Home/Drawers/RightDrawer';
-import Navbar from '@/components/Home/Navbar';
-import dynamic from 'next/dynamic';
-import io from 'socket.io-client';
 import MessagesList from '@/components/Home/MessageList';
+import AddFriendModal from '@/components/Home/Modals/AddFriendModal';
+import Navbar from '@/components/Home/Navbar';
+import io, { Socket } from 'socket.io-client';
 
-const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 let socket: Socket;
 
-const Home: NextPage = () => {
+const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
     const widthMatch = useMediaQuery(aspectRatioMediaQuery);
 
+    const { loading, username } = useSelector<State, HomePageState>(state => state.homePage);
     const dispatch = useDispatch();
-    const { loading } = useSelector<State, HomePageState>(state => state.homePage);
+    const router = useRouter();
 
     const [messages, setMessages] = React.useState<MessageInterface[]>([]);
+    const [id, setID] = React.useState('');
     const [message, setMessage] = React.useState('');
+
+    React.useEffect(() => {
+        if (!friend) {
+            router.push('/');
+        }
+
+        axios
+            .post<OutgoingDataGetFriendMessages>('/api/get-friend-messages', { friend, username })
+            .then(res => {
+                setMessages(res.data.messages);
+                setID(res.data.roomID);
+            })
+            .catch(console.log);
+    }, [router]);
 
     React.useEffect(() => {
         socket = io('http://localhost:3000', {
             path: '/api/socket',
         });
 
-        socket.on('connect', () => {});
+        socket.on('connect', () => {
+            console.log('Joining...');
+            socket.emit('join', id);
+        });
 
-        socket.on('receiveMessage', (msg: string) => {
-            setMessages(msgs => [...msgs, { displayName: 'tinmanfall', pfp: '', content: msg }]);
+        socket.on('receiveMessage', (msg: MessageInterface) => {
+            setMessages(msgs => [...msgs, msg]);
         });
 
         console.log(socket);
@@ -49,10 +69,13 @@ const Home: NextPage = () => {
                 socket.disconnect();
             }
         };
-    }, []);
+    }, [id]);
 
     return (
         <>
+            <Head>
+                <title>{friend}</title>
+            </Head>
             <AddFriendModal />
             {!loading && (
                 <Box sx={{ display: 'flex' }}>
@@ -72,7 +95,7 @@ const Home: NextPage = () => {
                                 onKeyDown={ev => {
                                     if (ev.key === 'Enter' && !ev.shiftKey) {
                                         ev.preventDefault();
-                                        socket.emit('sendMessage', message);
+                                        socket.emit('sendMessage', message, id);
                                         setMessage('');
                                     }
                                 }}
@@ -80,7 +103,7 @@ const Home: NextPage = () => {
                             <IconButton
                                 disableRipple
                                 onClick={() => {
-                                    socket.emit('sendMessage', message);
+                                    socket.emit('sendMessage', message, id);
                                     setMessage('');
                                 }}
                             >
@@ -109,4 +132,16 @@ const Home: NextPage = () => {
     );
 };
 
-export default Home;
+export const getServerSideProps: GetServerSideProps = async ({ query: { name } }) => {
+    if (!name || Array.isArray(name)) {
+        return { redirect: { destination: '/', statusCode: 400 }, props: {} };
+    }
+
+    return {
+        props: {
+            friend: name,
+        },
+    };
+};
+
+export default FriendChat;

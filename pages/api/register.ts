@@ -91,6 +91,7 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
         const user = await User.create({
             id: uuid(),
             about,
+            displayName,
             email,
             password,
             pfp,

@@ -29,11 +29,13 @@ import {
 const sequelize = new Sequelize('omnipresent', 'admin', '', {
     host: 'localhost',
     dialect: 'mariadb',
+    logging: false,
 });
 
 export class User extends Model {
     public id!: string;
     public username!: string;
+    public displayName!: string;
     public email!: string;
     public password!: string;
     public about!: string;
@@ -89,6 +91,11 @@ User.init(
         },
         username: {
             type: new DataTypes.STRING(32),
+            unique: true,
+            allowNull: false,
+        },
+        displayName: {
+            type: new DataTypes.STRING(32),
             allowNull: false,
         },
         email: {
@@ -116,6 +123,7 @@ User.init(
 export class Room extends Model {
     public id!: string;
     public name!: string;
+    public isDM!: boolean;
     public pfp!: string;
     public description!: string;
 
@@ -156,6 +164,10 @@ Room.init(
         },
         name: {
             type: new DataTypes.STRING(32),
+            allowNull: false,
+        },
+        isDM: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         },
         pfp: {

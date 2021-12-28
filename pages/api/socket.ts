@@ -16,8 +16,14 @@ const handler: PostRequestHandler<{}, {}> = (req, res) => {
         res.socket.server.io = io;
 
         io.on('connection', socket => {
-            socket.on('sendMessage', (message: string) => {
-                io.emit('receiveMessage', message);
+            socket.on('join', (id: string) => {
+                console.log(id);
+                socket.join(id);
+            });
+
+            socket.on('sendMessage', (message: string, id: string) => {
+                console.log(socket.rooms);
+                io.to(id).emit('receiveMessage', { displayName: 'tinmanfall', content: message, pfp: '' });
             });
         });
     }

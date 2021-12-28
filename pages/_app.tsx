@@ -6,6 +6,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from '@/theme';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
+import AuthMiddleware from '@/components/Auth/helpers';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             </Head>
             <ThemeProvider theme={theme}>
                 <Provider store={store}>
-                    <Component {...pageProps} />
+                    <AuthMiddleware>
+                        <Component {...pageProps} />
+                    </AuthMiddleware>
                 </Provider>
             </ThemeProvider>
         </>

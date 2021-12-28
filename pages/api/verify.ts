@@ -60,11 +60,13 @@ const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = asyn
                 }))
             );
 
-        const rooms = (await user.getRooms({ attributes: ['pfp', 'id', 'name'] })).map(room => ({
-            id: room.id,
-            pfp: room.pfp,
-            name: room.name,
-        }));
+        const rooms = (await user.getRooms({ attributes: ['pfp', 'id', 'name'], where: { isDM: false } })).map(
+            room => ({
+                id: room.id,
+                pfp: room.pfp,
+                name: room.name,
+            })
+        );
 
         const chats: [Chat[], Chat[]] = [friends, rooms];
 

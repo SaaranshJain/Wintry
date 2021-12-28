@@ -33,13 +33,13 @@ const LeftDrawerContent: React.FC = () => {
                 <Divider />
                 <List>
                     {chats[0]?.map(friend => (
-                        <Tooltip title={friend.name} placement="right">
+                        <Tooltip key={friend.id} title={friend.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
-                                disabled={router.pathname === `/${friend.name}`}
+                                disabled={router.asPath === `/friends/${friend.name}`}
                                 style={{ opacity: 1 }}
-                                selected={router.pathname === `/${friend.name}`}
-                                onClick={() => router.push(`/${friend.name}`)}
+                                selected={router.asPath === `/friends/${friend.name}`}
+                                onClick={() => router.push(`/friends/${friend.name}`)}
                             >
                                 <ListIconWithMinWidth>
                                     <StyledAvatarLeftDrawer
@@ -58,10 +58,10 @@ const LeftDrawerContent: React.FC = () => {
                         <Tooltip title={room.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
-                                disabled={router.pathname === `/${room.id}`}
+                                disabled={router.pathname === `/rooms/${room.id}`}
                                 style={{ opacity: 1 }}
-                                selected={router.pathname === `/${room.id}`}
-                                onClick={() => router.push(`/${room.id}`)}
+                                selected={router.pathname === `/rooms/${room.id}`}
+                                onClick={() => router.push(`/rooms/${room.id}`)}
                             >
                                 <ListIconWithMinWidth>
                                     <StyledAvatarLeftDrawer
