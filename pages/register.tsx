@@ -15,6 +15,7 @@ import React from 'react';
 import RegisterPageDialog from '@/components/Auth/Register/Dialog';
 import FormContent from '@/components/Auth/Register/FormContent';
 import axios from 'axios';
+import Head from 'next/head';
 
 const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
 
@@ -119,36 +120,41 @@ const Register: NextPage = () => {
     };
 
     return (
-        <ContainerSection component="section" elevation={0}>
-            <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
-                <Stepper activeStep={activeStep}>
-                    {steps.map((label, index) => {
-                        return (
-                            <Step key={index}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        );
-                    })}
-                </Stepper>
-                <InnerSectionPaper component="section">
-                    <RegisterPageDialog />
-                    <FormContent />
-                </InnerSectionPaper>
-                <FooterPaper component="footer">
-                    <Button
-                        variant="outlined"
-                        sx={{ marginRight: 'auto' }}
-                        onClick={handlePreviousStep}
-                        disabled={activeStep === 0}
-                    >
-                        Back
-                    </Button>
-                    <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit" onClick={handleNextStep}>
-                        {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-                    </Button>
-                </FooterPaper>
-            </FormPaper>
-        </ContainerSection>
+        <>
+            <Head>
+                <title>Login</title>
+            </Head>
+            <ContainerSection component="section" elevation={0}>
+                <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
+                    <Stepper activeStep={activeStep}>
+                        {steps.map((label, index) => {
+                            return (
+                                <Step key={index}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            );
+                        })}
+                    </Stepper>
+                    <InnerSectionPaper component="section">
+                        <RegisterPageDialog />
+                        <FormContent />
+                    </InnerSectionPaper>
+                    <FooterPaper component="footer">
+                        <Button
+                            variant="outlined"
+                            sx={{ marginRight: 'auto' }}
+                            onClick={handlePreviousStep}
+                            disabled={activeStep === 0}
+                        >
+                            Back
+                        </Button>
+                        <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit" onClick={handleNextStep}>
+                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                        </Button>
+                    </FooterPaper>
+                </FormPaper>
+            </ContainerSection>
+        </>
     );
 };
 

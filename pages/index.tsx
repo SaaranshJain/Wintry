@@ -18,6 +18,7 @@ import Navbar from '@/components/Home/Navbar';
 import dynamic from 'next/dynamic';
 import io from 'socket.io-client';
 import MessagesList from '@/components/Home/MessageList';
+import Head from 'next/head';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 let socket: Socket;
@@ -53,6 +54,9 @@ const Home: NextPage = () => {
 
     return (
         <>
+            <Head>
+                <title>Omnipresent</title>
+            </Head>
             <AddFriendModal />
             {!loading && (
                 <Box sx={{ display: 'flex' }}>

@@ -9,6 +9,7 @@ import { ContainerSection, FooterPaper, FormPaper, InnerSectionPaper } from '@/c
 
 import React from 'react';
 import axios from 'axios';
+import Head from 'next/head';
 
 const Login: NextPage = () => {
     const [email, setEmail] = React.useState('');
@@ -41,49 +42,58 @@ const Login: NextPage = () => {
     }, [router]);
 
     return (
-        <ContainerSection component="section" elevation={0}>
-            <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
-                <InnerSectionPaper component="section">
-                    <Dialog open={dialogOpen}>
-                        <DialogTitle>
-                            Error
-                            <DialogIconButton onClick={() => setDialogOpen(false)}>
-                                <Close />
-                            </DialogIconButton>
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>{dialogMsg}</DialogContentText>
-                        </DialogContent>
-                    </Dialog>
-                    <TextField
-                        required
-                        value={email}
-                        onChange={ev => setEmail(ev.target.value)}
-                        type="text"
-                        fullWidth
-                        color="primary"
-                        label="Email Address"
-                    />
-                    <TextField
-                        required
-                        value={password}
-                        onChange={ev => setPassword(ev.target.value)}
-                        type="password"
-                        fullWidth
-                        color="primary"
-                        label="Password"
-                    />
-                </InnerSectionPaper>
-                <FooterPaper component="footer">
-                    <Button variant="outlined" sx={{ marginRight: 'auto' }} onClick={() => router.push('/register')}>
-                        Register Instead
-                    </Button>
-                    <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit">
-                        Submit
-                    </Button>
-                </FooterPaper>
-            </FormPaper>
-        </ContainerSection>
+        <>
+            <Head>
+                <title>Login</title>
+            </Head>
+            <ContainerSection component="section" elevation={0}>
+                <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
+                    <InnerSectionPaper component="section">
+                        <Dialog open={dialogOpen}>
+                            <DialogTitle>
+                                Error
+                                <DialogIconButton onClick={() => setDialogOpen(false)}>
+                                    <Close />
+                                </DialogIconButton>
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>{dialogMsg}</DialogContentText>
+                            </DialogContent>
+                        </Dialog>
+                        <TextField
+                            required
+                            value={email}
+                            onChange={ev => setEmail(ev.target.value)}
+                            type="text"
+                            fullWidth
+                            color="primary"
+                            label="Email Address"
+                        />
+                        <TextField
+                            required
+                            value={password}
+                            onChange={ev => setPassword(ev.target.value)}
+                            type="password"
+                            fullWidth
+                            color="primary"
+                            label="Password"
+                        />
+                    </InnerSectionPaper>
+                    <FooterPaper component="footer">
+                        <Button
+                            variant="outlined"
+                            sx={{ marginRight: 'auto' }}
+                            onClick={() => router.push('/register')}
+                        >
+                            Register Instead
+                        </Button>
+                        <Button variant="outlined" sx={{ marginLeft: 'auto' }} type="submit">
+                            Submit
+                        </Button>
+                    </FooterPaper>
+                </FormPaper>
+            </ContainerSection>
+        </>
     );
 };
 
