@@ -24,6 +24,20 @@ export const AddFriendModalOutline = styled(Modal)<ModalProps>(() => {
     };
 });
 
+export const CreateRoomModalOutline = styled(Modal)<ModalProps>(() => {
+    return {
+        position: 'fixed',
+        left: '30vw',
+        right: '30vw',
+        top: '15vh',
+        bottom: '15vh',
+        backgroundColor: '#353535',
+        padding: '2.5rem',
+        borderRadius: '15px',
+        minWidth: 240,
+    };
+});
+
 export const GridBox = styled(Box)<BoxProps>(() => {
     return { display: 'grid' };
 });

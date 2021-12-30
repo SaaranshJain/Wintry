@@ -73,7 +73,7 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
         const pfpFile = files.pfp;
 
         // file can be either File or File[] so making sure its a single file only
-        if (Array.isArray(pfpFile)) {
+        if (!pfpFile || Array.isArray(pfpFile)) {
             res.status(400).json({ token: null });
             return writeToLog('register', 'Multiple files received for pfp from client');
         }

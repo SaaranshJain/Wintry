@@ -53,7 +53,7 @@ const PfpInput: React.FC = () => {
 };
 
 const PageThree: React.FC = () => {
-    const { about, displayName, pfp, username } = useSelector<State, RegisterPageState>(state => state.registerPage);
+    const { about, displayName, pfp } = useSelector<State, RegisterPageState>(state => state.registerPage);
     const dispatch = useDispatch();
     const [currentLength, setCurrentLength] = React.useState(0);
 

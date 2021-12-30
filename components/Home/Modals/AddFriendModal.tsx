@@ -54,13 +54,15 @@ const AddFriendModal: React.FC = () => {
                     )}
                 />
                 <SendButton
-                    onClick={async () => {
+                    onClick={() => {
                         axios
                             .post('/api/send-friend-request', {
                                 currentUser: id,
                                 targetUser: friendUsername,
                             })
-                            .catch(() => {});
+                            .finally(() => {
+                                dispatch(setModalState('closed'));
+                            });
                     }}
                     variant="outlined"
                 >

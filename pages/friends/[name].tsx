@@ -62,8 +62,6 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
             setMessages(msgs => [...msgs, msg]);
         });
 
-        console.log(socket);
-
         return () => {
             if (socket) {
                 socket.disconnect();

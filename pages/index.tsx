@@ -21,6 +21,8 @@ import MessagesList from '@/components/Home/MessageList';
 import Head from 'next/head';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
+const CreateRoomModal = dynamic(() => import('@/components/Home/Modals/CreateRoomModal'));
+
 let socket: Socket;
 
 const Home: NextPage = () => {
@@ -58,6 +60,7 @@ const Home: NextPage = () => {
                 <title>Omnipresent</title>
             </Head>
             <AddFriendModal />
+            <CreateRoomModal />
             {!loading && (
                 <Box sx={{ display: 'flex' }}>
                     <CssBaseline />
