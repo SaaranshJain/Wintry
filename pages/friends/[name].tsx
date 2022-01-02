@@ -15,7 +15,6 @@ import React from 'react';
 import axios from 'axios';
 import Head from 'next/head';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
-import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 import MessagesList from '@/components/Home/MessageList';
 import AddFriendModal from '@/components/Home/Modals/AddFriendModal';
 import Navbar from '@/components/Home/Navbar';
@@ -108,7 +107,6 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
                                 <Send />
                             </IconButton>
                         </InputPaper>
-                        <RightDrawer widthMatch={widthMatch} />
                         <StyledSpeedDial ariaLabel="Add new" color="primary" icon={<SpeedDialIcon />}>
                             <SpeedDialAction
                                 onClick={() => dispatch(setModalState('create-room'))}

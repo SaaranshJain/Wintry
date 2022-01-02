@@ -23,9 +23,10 @@ import {
     RightDrawerOutline,
     StyledAvatarRightDrawer,
 } from './helpers';
+import { GetServerSideProps } from 'next';
 
-const RightDrawerContent: React.FC = () => {
-    const { currentChat, loading } = useSelector<State, HomePageState>(state => state.homePage);
+const RightDrawerContent: React.FC<{ currentChat: string }> = ({ currentChat }) => {
+    const { loading } = useSelector<State, HomePageState>(state => state.homePage);
     const [members, setMembers] = React.useState<Member[]>([]);
 
     React.useEffect(() => {
@@ -77,9 +78,18 @@ const RightDrawerContent: React.FC = () => {
     );
 };
 
-const RightDrawer: React.FC<{ widthMatch: boolean }> = ({ widthMatch }) => {
+interface RightDrawerProps {
+    widthMatch: boolean;
+    currentChat: string | null;
+}
+
+const RightDrawer: React.FC<RightDrawerProps> = ({ currentChat, widthMatch }) => {
     const { rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);
     const dispatch = useDispatch();
+
+    if (!currentChat) {
+        return <></>;
+    }
 
     if (!widthMatch) {
         return (
@@ -90,16 +100,36 @@ const RightDrawer: React.FC<{ widthMatch: boolean }> = ({ widthMatch }) => {
                 onOpen={() => dispatch(openRightDrawer())}
                 anchor="right"
             >
-                <RightDrawerContent />
+                <RightDrawerContent currentChat={currentChat} />
             </SwipeableDrawer>
         );
     }
 
     return (
         <RightDrawerOutline variant="permanent" PaperProps={{ elevation: 1 }} anchor="right">
-            <RightDrawerContent />
+            <RightDrawerContent currentChat={currentChat} />
         </RightDrawerOutline>
     );
 };
+
+// export const getServerSideProps: GetServerSideProps = async ({ query: { name, room_number } }) => {
+//     if (Array.isArray(name) || Array.isArray(room_number)) {
+//         return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
+//     }
+
+//     if (!name) {
+//         if (room_number) {
+//             return { props: { currentChat: room_number } };
+//         }
+
+//         return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
+//     }
+
+//     if (!room_number) {
+//         return { props: { currentChat: null } };
+//     }
+
+//     return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
+// };
 
 export default RightDrawer;

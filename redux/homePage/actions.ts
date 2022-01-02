@@ -1,4 +1,4 @@
-import { Chat } from '@/pages/api/verify';
+import { Chats } from '@/pages/api/verify';
 
 export enum HomeActionWithoutPayload {
     OPEN_LEFT_DRAWER = 'HOME_OPEN_LEFT_DRAWER',
@@ -12,7 +12,6 @@ export enum HomeActionWithoutPayload {
 export enum HomeActionWithPayload {
     SET_EMAIL = 'HOME_SET_EMAIL',
     SET_USERNAME = 'HOME_SET_USERNAME',
-    SET_ID = 'HOME_SET_ID',
     SET_CHATS = 'HOME_SET_CHATS',
     SET_MODAL_STATE = 'HOME_SET_MODAL_STATE',
 }
@@ -66,14 +65,7 @@ export const setUsername = (username: string): Action => {
     };
 };
 
-export const setID = (id: string): Action => {
-    return {
-        type: HomeActionWithPayload.SET_ID,
-        payload: id,
-    };
-};
-
-export const setChats = (chats: [Chat[], Chat[]]): Action<[Chat[], Chat[]]> => {
+export const setChats = (chats: Chats): Action<Chats> => {
     return {
         type: HomeActionWithPayload.SET_CHATS,
         payload: chats,

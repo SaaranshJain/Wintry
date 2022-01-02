@@ -22,14 +22,14 @@ const handler: PostRequestHandler<IncomingDataSendFriendRequest, OutgoingDataSen
     const { currentUser, targetUser } = req.body;
 
     try {
-        const user = await User.findByPk(currentUser);
+        const user = await User.findOne({ where: { username: currentUser } });
         const friend = await User.findOne({ where: { username: targetUser } });
 
         if (!user || !friend) {
             res.status(500).json({ success: false });
             return await writeToLog('index', 'Either user or friend not found');
         }
-        
+
         await user.addFirstFriend(friend);
         res.status(200).json({ success: true });
     } catch (err: any) {

@@ -22,7 +22,6 @@ const handler: PostRequestHandler<{}, {}> = (req, res) => {
             });
 
             socket.on('sendMessage', (message: string, id: string) => {
-                console.log(socket.rooms);
                 io.to(id).emit('receiveMessage', { displayName: 'tinmanfall', content: message, pfp: '' });
             });
         });

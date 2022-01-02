@@ -122,6 +122,7 @@ User.init(
 
 export class Room extends Model {
     public id!: string;
+    public room_number!: number;
     public name!: string;
     public isDM!: boolean;
     public pfp!: string;
@@ -161,6 +162,12 @@ Room.init(
         id: {
             type: new DataTypes.STRING(36),
             primaryKey: true,
+        },
+        room_number: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            unique: true,
         },
         name: {
             type: new DataTypes.STRING(32),

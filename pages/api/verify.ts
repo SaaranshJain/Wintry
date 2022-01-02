@@ -9,22 +9,27 @@ interface IncomingDataVerify {
     token: string;
 }
 
-export interface Chat {
-    pfp: string | null;
-    name: string;
-    id: string;
-}
-
 interface OutgoingDataNotVerified {
     verified: false;
 }
 
+export interface Chats {
+    friends: {
+        pfp: string | null;
+        name: string;
+    }[];
+    rooms: {
+        pfp: string | null;
+        name: string;
+        room_number: number;
+    }[];
+}
+
 interface OutgoingDataVerified {
     verified: true;
-    id: string;
     email: string;
     username: string;
-    chats: [Chat[], Chat[]];
+    chats: Chats;
 }
 
 export type OutgoingDataVerify = OutgoingDataNotVerified | OutgoingDataVerified;
@@ -42,35 +47,31 @@ const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = asyn
     if (typeof ver === 'string') return res.status(500).json({ verified: false });
 
     try {
-        const user = await User.findByPk(ver.id, { attributes: ['id', 'email', 'username'] });
+        const user = await User.findByPk(ver.id);
 
         if (!user) return res.status(400).json({ verified: false });
 
-        const friends = (await user.getFirstFriend({ attributes: ['pfp', 'id', 'username'] }))
+        const friends = (await user.getFirstFriend())
             .map(friend => ({
-                id: friend.id,
                 pfp: friend.pfp,
                 name: friend.username,
             }))
             .concat(
-                (await user.getSecondFriend({ attributes: ['pfp', 'id', 'username'] })).map(friend => ({
-                    id: friend.id,
+                (await user.getSecondFriend()).map(friend => ({
                     pfp: friend.pfp,
                     name: friend.username,
                 }))
             );
 
-        const rooms = (await user.getRooms({ attributes: ['pfp', 'id', 'name'], where: { isDM: false } })).map(
-            room => ({
-                id: room.id,
-                pfp: room.pfp,
-                name: room.name,
-            })
-        );
+        const rooms = (await user.getRooms({ where: { isDM: false } })).map(room => ({
+            pfp: room.pfp,
+            name: room.name,
+            room_number: room.room_number,
+        }));
 
-        const chats: [Chat[], Chat[]] = [friends, rooms];
+        const chats = { friends, rooms };
 
-        res.status(200).json({ verified: true, id: user.id, email: user.email, username: user.username, chats });
+        res.status(200).json({ verified: true, email: user.email, username: user.username, chats });
     } catch (err: any) {
         res.status(200).json({ verified: false });
         writeToLog('index', err.message);

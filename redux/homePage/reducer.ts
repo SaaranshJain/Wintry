@@ -1,26 +1,24 @@
-import { Chat } from '@/pages/api/verify';
+import { Chats } from '@/pages/api/verify';
 import { Action, HomeActionWithoutPayload, HomeActionWithPayload } from './actions';
 
 export interface HomePageState {
-    id: string;
     email: string;
     username: string;
     widthMatch: boolean;
     leftDrawerOpen: boolean;
     rightDrawerOpen: boolean;
-    chats: [Chat[], Chat[]] | [];
+    chats: Chats;
     loading: boolean;
     modalState: 'closed' | 'add-friend' | 'create-room';
 }
 
 const initialState: HomePageState = {
-    id: '',
     email: '',
     username: '',
     widthMatch: true,
     leftDrawerOpen: false,
     rightDrawerOpen: false,
-    chats: [],
+    chats: { friends: [], rooms: [] },
     loading: true,
     modalState: 'closed',
 };
@@ -31,13 +29,6 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             return {
                 ...state,
                 email: action.payload as string,
-            };
-        }
-
-        case HomeActionWithPayload.SET_ID: {
-            return {
-                ...state,
-                id: action.payload as string,
             };
         }
 
@@ -79,7 +70,7 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
         case HomeActionWithPayload.SET_CHATS: {
             return {
                 ...state,
-                chats: action.payload as [Chat[], Chat[]],
+                chats: action.payload as Chats,
             };
         }
 

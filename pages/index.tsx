@@ -13,7 +13,6 @@ import { aspectRatioMediaQuery } from '@/components/helpers';
 
 import React from 'react';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
-import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 import Navbar from '@/components/Home/Navbar';
 import dynamic from 'next/dynamic';
 import io from 'socket.io-client';
@@ -44,8 +43,6 @@ const Home: NextPage = () => {
         socket.on('receiveMessage', (msg: string) => {
             setMessages(msgs => [...msgs, { displayName: 'tinmanfall', pfp: '', content: msg }]);
         });
-
-        console.log(socket);
 
         return () => {
             if (socket) {
@@ -94,7 +91,6 @@ const Home: NextPage = () => {
                                 <Send />
                             </IconButton>
                         </InputPaper>
-                        <RightDrawer widthMatch={widthMatch} />
                         <StyledSpeedDial ariaLabel="Add new" color="primary" icon={<SpeedDialIcon />}>
                             <SpeedDialAction
                                 onClick={() => dispatch(setModalState('create-room'))}

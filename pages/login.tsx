@@ -35,12 +35,6 @@ const Login: NextPage = () => {
         router.push('/');
     };
 
-    React.useEffect(() => {
-        if (localStorage.getItem('token')) {
-            router.push('/');
-        }
-    }, [router]);
-
     return (
         <>
             <Head>

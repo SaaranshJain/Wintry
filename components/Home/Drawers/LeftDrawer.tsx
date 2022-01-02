@@ -32,8 +32,8 @@ const LeftDrawerContent: React.FC = () => {
                 </List>
                 <Divider />
                 <List>
-                    {chats[0]?.map(friend => (
-                        <Tooltip key={friend.id} title={friend.name} placement="right">
+                    {chats.friends.map((friend, index) => (
+                        <Tooltip key={index} title={friend.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
                                 disabled={router.asPath === `/friends/${friend.name}`}
@@ -54,14 +54,14 @@ const LeftDrawerContent: React.FC = () => {
                 </List>
                 <Divider />
                 <List>
-                    {chats[1]?.map(room => (
-                        <Tooltip title={room.name} placement="right">
+                    {chats.rooms.map((room, index) => (
+                        <Tooltip key={index} title={room.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
-                                disabled={router.pathname === `/rooms/${room.id}`}
+                                disabled={router.pathname === `/rooms/${room.room_number}`}
                                 style={{ opacity: 1 }}
-                                selected={router.pathname === `/rooms/${room.id}`}
-                                onClick={() => router.push(`/rooms/${room.id}`)}
+                                selected={router.pathname === `/rooms/${room.room_number}`}
+                                onClick={() => router.push(`/rooms/${room.room_number}`)}
                             >
                                 <ListIconWithMinWidth>
                                     <StyledAvatarLeftDrawer

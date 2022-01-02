@@ -13,7 +13,7 @@ interface Option {
 }
 
 const AddFriendModal: React.FC = () => {
-    const { id, modalState } = useSelector<State, HomePageState>(state => state.homePage);
+    const { username, modalState } = useSelector<State, HomePageState>(state => state.homePage);
     const dispatch = useDispatch();
 
     const [friendUsername, setFriendUsername] = React.useState('');
@@ -57,7 +57,7 @@ const AddFriendModal: React.FC = () => {
                     onClick={() => {
                         axios
                             .post('/api/send-friend-request', {
-                                currentUser: id,
+                                currentUser: username,
                                 targetUser: friendUsername,
                             })
                             .finally(() => {

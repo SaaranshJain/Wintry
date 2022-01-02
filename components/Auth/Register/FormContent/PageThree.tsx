@@ -84,7 +84,7 @@ const PageThree: React.FC = () => {
                 type="text"
                 fullWidth
                 color="primary"
-                label="Username"
+                label="Display Name"
             />
             <TextField
                 value={about}

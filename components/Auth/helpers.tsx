@@ -1,6 +1,6 @@
 import { PaperPropsWithComponent } from '@/helpers';
 import { OutgoingDataVerify } from '@/pages/api/verify';
-import { setID, setChats, setEmail, setUsername, setLoadingFalse, setLoadingTrue } from '@/redux/homePage/actions';
+import { setChats, setEmail, setUsername, setLoadingFalse, setLoadingTrue } from '@/redux/homePage/actions';
 import { HomePageState } from '@/redux/homePage/reducer';
 import { State } from '@/redux/store';
 import { Paper, styled } from '@mui/material';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import LoadingScreen from '../LoadingScreen';
 
 export const ContainerSection = styled(Paper)<PaperPropsWithComponent<'section'>>(() => {
     return { width: '100%', height: '100%', display: 'grid', placeItems: 'center' };
@@ -57,11 +58,13 @@ const AuthMiddleware: React.FC = ({ children }) => {
                 router.push('/');
             }
 
+            dispatch(setLoadingFalse());
             return;
         }
 
         if (!token) {
             router.push('/login');
+            dispatch(setLoadingFalse());
             return;
         }
 
@@ -69,10 +72,9 @@ const AuthMiddleware: React.FC = ({ children }) => {
             .post<OutgoingDataVerify>('/api/verify', { token })
             .then(res => {
                 if (res.data.verified) {
-                    const { email, id, username, chats } = res.data;
+                    const { email, username, chats } = res.data;
 
                     dispatch(setEmail(email));
-                    dispatch(setID(id));
                     dispatch(setUsername(username));
                     dispatch(setChats(chats));
                     dispatch(setLoadingFalse());
@@ -84,10 +86,11 @@ const AuthMiddleware: React.FC = ({ children }) => {
             .catch(() => {
                 localStorage.removeItem('token');
                 router.push('/login');
+                dispatch(setLoadingFalse());
             });
     }, [router, dispatch]);
 
-    return loading ? <div></div> : <>{children}</>;
+    return loading ? <LoadingScreen /> : <>{children}</>;
 };
 
 export default AuthMiddleware;
