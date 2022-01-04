@@ -1,10 +1,12 @@
-import { RegisterPageState } from '@/redux/registerPage/reducer';
-import { State } from '@/redux/store';
-import React from 'react';
+import type { RegisterPageState } from '@/redux/registerPage/reducer';
+import type { State } from '@/redux/store';
+
 import { useSelector } from 'react-redux';
+
 import PageOne from './PageOne';
 import PageThree from './PageThree';
 import PageTwo from './PageTwo';
+import React from 'react';
 
 const FormContent: React.FC = () => {
     const { activeStep } = useSelector<State, RegisterPageState>(state => state.registerPage);

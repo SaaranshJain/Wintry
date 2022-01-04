@@ -66,7 +66,7 @@ const handler: PostRequestHandler<IncomingDataRegister, OutgoingDataRegister> = 
             res.status(400).json({ token: null });
             return writeToLog(
                 'register',
-                'User tried registering with a pre-existing email / username indicating that the previous check failed'
+                'User tried registering with a pre-existing email or username indicating that the previous check failed'
             );
         }
 

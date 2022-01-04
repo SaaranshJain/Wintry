@@ -1,15 +1,14 @@
 import type { NextPage } from 'next';
 import type { OutgoingDataLogin } from './api/login';
 
-import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Close } from '@mui/icons-material';
-import { DialogIconButton } from '@/components/Auth/Register/Dialog/helpers';
 import { ContainerSection, FooterPaper, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
 
 import React from 'react';
 import axios from 'axios';
 import Head from 'next/head';
+import PageDialog from '@/components/Auth/Register/Dialog';
 
 const Login: NextPage = () => {
     const [email, setEmail] = React.useState('');
@@ -21,18 +20,17 @@ const Login: NextPage = () => {
     const handleSubmit = async (ev: React.FormEvent<HTMLDivElement> | React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
 
-        const {
-            data: { token, message },
-        } = await axios.post<OutgoingDataLogin>('/api/login', { email, password });
-
-        if (!token) {
-            setDialogOpen(true);
-            setDialogMsg(message);
-            return;
-        }
-
-        localStorage.setItem('token', token);
-        router.push('/');
+        axios
+            .post<OutgoingDataLogin>('/api/login', { email, password })
+            .then(res => {
+                const { token } = res.data;
+                token && localStorage.setItem('token', token);
+                router.push('/');
+            })
+            .catch(err => {
+                setDialogOpen(true);
+                setDialogMsg(err.response.data.message);
+            });
     };
 
     return (
@@ -43,17 +41,11 @@ const Login: NextPage = () => {
             <ContainerSection component="section" elevation={0}>
                 <FormPaper component="form" elevation={1} onSubmit={handleSubmit}>
                     <InnerSectionPaper component="section">
-                        <Dialog open={dialogOpen}>
-                            <DialogTitle>
-                                Error
-                                <DialogIconButton onClick={() => setDialogOpen(false)}>
-                                    <Close />
-                                </DialogIconButton>
-                            </DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>{dialogMsg}</DialogContentText>
-                            </DialogContent>
-                        </Dialog>
+                        <PageDialog
+                            dialogMsg={dialogMsg}
+                            dialogOpen={dialogOpen}
+                            handleClose={() => setDialogOpen(false)}
+                        />
                         <TextField
                             required
                             value={email}

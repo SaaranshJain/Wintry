@@ -14,6 +14,7 @@ export enum HomeActionWithPayload {
     SET_USERNAME = 'HOME_SET_USERNAME',
     SET_CHATS = 'HOME_SET_CHATS',
     SET_MODAL_STATE = 'HOME_SET_MODAL_STATE',
+    SET_MESSAGE = 'HOME_SET_MESSAGE',
 }
 
 interface ActionWithoutPayload {
@@ -88,5 +89,12 @@ export const setModalState = (state: string): Action => {
     return {
         type: HomeActionWithPayload.SET_MODAL_STATE,
         payload: state,
+    };
+};
+
+export const setMessage = (message: string): Action => {
+    return {
+        type: HomeActionWithPayload.SET_MESSAGE,
+        payload: message,
     };
 };

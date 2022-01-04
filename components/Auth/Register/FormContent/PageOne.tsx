@@ -1,6 +1,7 @@
+import type { RegisterPageState } from '@/redux/registerPage/reducer';
+import type { State } from '@/redux/store';
+
 import { setEmail, setPassword, setConfirmPassword, setUsername } from '@/redux/registerPage/actions';
-import { RegisterPageState } from '@/redux/registerPage/reducer';
-import { State } from '@/redux/store';
 import { TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,6 +11,7 @@ const PageOne: React.FC = () => {
     const { email, password, confirmPassword, username } = useSelector<State, RegisterPageState>(
         state => state.registerPage
     );
+
     const dispatch = useDispatch();
 
     return (

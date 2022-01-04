@@ -1,4 +1,4 @@
-import { Message, Room, User } from '@/db';
+import { Room, User } from '@/db';
 import { PostRequestHandler, writeToLog } from '@/helpers';
 import { v4 as uuid } from 'uuid';
 
@@ -15,7 +15,7 @@ export interface MessageInterface {
 
 export interface OutgoingDataGetFriendMessages {
     messages: MessageInterface[];
-    roomID: string;
+    roomNumber: number;
 }
 
 const handler: PostRequestHandler<IncomingDataGetFriendMessages, OutgoingDataGetFriendMessages> = async (req, res) => {
@@ -25,7 +25,7 @@ const handler: PostRequestHandler<IncomingDataGetFriendMessages, OutgoingDataGet
     const friend = await User.findOne({ where: { username: friendUsername } });
 
     if (!user || !friend) {
-        res.status(400).json({ messages: [], roomID: '' });
+        res.status(400).json({ messages: [], roomNumber: 0 });
         return writeToLog('index', 'User not found while fetching messages');
     }
 
@@ -44,7 +44,7 @@ const handler: PostRequestHandler<IncomingDataGetFriendMessages, OutgoingDataGet
         });
 
         await room.addUsers([user, friend]);
-        res.status(200).json({ messages: [], roomID: room.id });
+        res.status(200).json({ messages: [], roomNumber: room.room_number });
         return;
     }
 
@@ -61,7 +61,7 @@ const handler: PostRequestHandler<IncomingDataGetFriendMessages, OutgoingDataGet
         })
     );
 
-    res.status(200).json({ messages, roomID: dm.id });
+    res.status(200).json({ messages, roomNumber: dm.room_number });
 };
 
 export default handler;

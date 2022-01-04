@@ -1,14 +1,16 @@
+import type { OutgoingDataVerify } from '@/pages/api/verify';
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+
 import { PaperPropsWithComponent } from '@/helpers';
-import { OutgoingDataVerify } from '@/pages/api/verify';
 import { setChats, setEmail, setUsername, setLoadingFalse, setLoadingTrue } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { Paper, styled } from '@mui/material';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import LoadingScreen from '../LoadingScreen';
+import axios from 'axios';
+import React from 'react';
 
 export const ContainerSection = styled(Paper)<PaperPropsWithComponent<'section'>>(() => {
     return { width: '100%', height: '100%', display: 'grid', placeItems: 'center' };

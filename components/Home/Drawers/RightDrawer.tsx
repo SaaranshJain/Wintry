@@ -1,6 +1,8 @@
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+import type { Member, OutgoingDataRoomUsers } from '@/pages/api/room-users';
+
 import { closeRightDrawer, openRightDrawer } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { ExpandMore } from '@mui/icons-material';
 import {
     Toolbar,
@@ -12,10 +14,7 @@ import {
     ListItemText,
     Badge,
 } from '@mui/material';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { Member, OutgoingDataRoomUsers } from '@/pages/api/room-users';
 import {
     AccordionListItem,
     FullWidthAccordion,
@@ -23,24 +22,28 @@ import {
     RightDrawerOutline,
     StyledAvatarRightDrawer,
 } from './helpers';
-import { GetServerSideProps } from 'next';
+
+import axios from 'axios';
+import React from 'react';
+import { useRouter } from 'next/router';
 
 const RightDrawerContent: React.FC<{ currentChat: string }> = ({ currentChat }) => {
     const { loading } = useSelector<State, HomePageState>(state => state.homePage);
     const [members, setMembers] = React.useState<Member[]>([]);
+    const router = useRouter();
 
     React.useEffect(() => {
         if (!loading) {
             axios
-                .post<OutgoingDataRoomUsers>('/api/room-users', { roomID: currentChat })
+                .post<OutgoingDataRoomUsers>('/api/room-users', { room_number: currentChat })
                 .then(res => {
                     setMembers(res.data.members);
                 })
                 .catch(() => {
-                    setMembers([]);
+                    router.push('/');
                 });
         }
-    }, [currentChat, loading]);
+    }, [currentChat, loading, router]);
 
     return (
         <>
@@ -80,7 +83,7 @@ const RightDrawerContent: React.FC<{ currentChat: string }> = ({ currentChat }) 
 
 interface RightDrawerProps {
     widthMatch: boolean;
-    currentChat: string | null;
+    currentChat?: string;
 }
 
 const RightDrawer: React.FC<RightDrawerProps> = ({ currentChat, widthMatch }) => {
@@ -111,25 +114,5 @@ const RightDrawer: React.FC<RightDrawerProps> = ({ currentChat, widthMatch }) =>
         </RightDrawerOutline>
     );
 };
-
-// export const getServerSideProps: GetServerSideProps = async ({ query: { name, room_number } }) => {
-//     if (Array.isArray(name) || Array.isArray(room_number)) {
-//         return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
-//     }
-
-//     if (!name) {
-//         if (room_number) {
-//             return { props: { currentChat: room_number } };
-//         }
-
-//         return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
-//     }
-
-//     if (!room_number) {
-//         return { props: { currentChat: null } };
-//     }
-
-//     return { redirect: { destination: '/', statusCode: 400 }, props: { currentChat: null } };
-// };
 
 export default RightDrawer;

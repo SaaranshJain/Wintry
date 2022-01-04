@@ -1,12 +1,14 @@
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+
 import { aspectRatioMediaQuery } from '@/components/helpers';
 import { closeLeftDrawer, openLeftDrawer, closeRightDrawer, openRightDrawer } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { People, Menu } from '@mui/icons-material';
 import { Toolbar, IconButton, Typography, useMediaQuery } from '@mui/material';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ElevatedAppbar } from './helpers';
+
+import React from 'react';
 
 const Navbar: React.FC = () => {
     const { leftDrawerOpen, rightDrawerOpen } = useSelector<State, HomePageState>(state => state.homePage);

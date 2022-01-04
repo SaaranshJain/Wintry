@@ -101,7 +101,7 @@ export const setAbout = (about: string): Action => {
     };
 };
 
-export const setPfp = (pfp: File): Action<File> => {
+export const setPfp = (pfp: File | null): Action<File | null> => {
     return {
         type: RegisterActionWithPayload.SET_PFP,
         payload: pfp,

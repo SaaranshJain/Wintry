@@ -1,6 +1,8 @@
+import type { MessageInterface } from '@/pages/api/get-friend-messages';
+
 import { aspectRatioMediaQuery } from '@/components/helpers';
-import { MessageInterface } from '@/pages/api/get-friend-messages';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, useMediaQuery } from '@mui/material';
+
 import React from 'react';
 
 const MessagesList: React.FC<{ messages: MessageInterface[] }> = ({ messages }) => {

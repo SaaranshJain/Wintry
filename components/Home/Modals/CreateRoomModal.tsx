@@ -1,25 +1,28 @@
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+import type { OutgoingDataCreateRoom } from '@/pages/api/create-room';
+
 import {
     RemovePfpIconButton,
     StyledAccountCircle,
     StyledCloseIcon,
     UserAvatar,
 } from '@/components/Auth/Register/helpers';
-import { OutgoingDataCreateRoom } from '@/pages/api/create-room';
 import { setModalState } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { Badge, TextField, Tooltip, Zoom } from '@mui/material';
-import axios from 'axios';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateRoomModalOutline, GridBox, ModalTitle, SendButton } from './helpers';
 
+import axios from 'axios';
+import React from 'react';
+
 interface PfpProps {
-    pfp: File | null;
     setPfp: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
-const PfpWithRemoveButton: React.FC<PfpProps> = ({ pfp, setPfp }) => {
+type PfpPropsWithRemove = PfpProps & { pfp: File | null };
+
+const PfpWithRemoveButton: React.FC<PfpPropsWithRemove> = ({ pfp, setPfp }) => {
     return (
         <Badge
             overlap="circular"
@@ -89,11 +92,7 @@ const CreateRoomModal: React.FC = () => {
                             marginBottom: '1rem',
                         }}
                     >
-                        {pfp ? (
-                            <PfpWithRemoveButton pfp={pfp} setPfp={setPfp} />
-                        ) : (
-                            <PfpInput pfp={pfp} setPfp={setPfp} />
-                        )}
+                        {pfp ? <PfpWithRemoveButton pfp={pfp} setPfp={setPfp} /> : <PfpInput setPfp={setPfp} />}
                     </label>
                 </Tooltip>
                 <TextField
@@ -129,8 +128,9 @@ const CreateRoomModal: React.FC = () => {
                         body.append('description', description);
                         body.append('username', username);
 
-                        await axios.post<OutgoingDataCreateRoom>('/api/create-room', body);
-                        dispatch(setModalState('closed'));
+                        axios.post<OutgoingDataCreateRoom>('/api/create-room', body).finally(() => {
+                            dispatch(setModalState('closed'));
+                        });
                     }}
                 >
                     Create!

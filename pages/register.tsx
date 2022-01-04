@@ -7,7 +7,7 @@ import type { OutgoingDataVerifyOTP } from './api/verify-otp';
 import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
+import { hideDialog, nextStep, prevStep, setDialogMsg, showDialog } from '@/redux/registerPage/actions';
 import { State } from '@/redux/store';
 import { ContainerSection, FooterPaper, FormPaper, InnerSectionPaper } from '@/components/Auth/helpers';
 
@@ -20,10 +20,19 @@ import Head from 'next/head';
 const steps = ['Enter login information', 'Verify your email', 'Create your profile'];
 
 const Register: NextPage = () => {
-    const { about, activeStep, confirmPassword, displayName, email, password, pfp, username, code } = useSelector<
-        State,
-        RegisterPageState
-    >(state => state.registerPage);
+    const {
+        about,
+        activeStep,
+        confirmPassword,
+        dialogMsg,
+        dialogOpen,
+        displayName,
+        email,
+        password,
+        pfp,
+        username,
+        code,
+    } = useSelector<State, RegisterPageState>(state => state.registerPage);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -55,14 +64,15 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('The passwords do not match'));
             }
 
-            const res = await axios.post<OutgoingDataCheckEmail>(`/api/check-email`, { email, username });
-
-            if (!res.data.allow) {
-                dispatch(showDialog());
-                return dispatch(setDialogMsg('That email / username is taken'));
-            }
-
-            return dispatch(nextStep());
+            axios
+                .post<OutgoingDataCheckEmail>(`/api/check-email`, { email, username })
+                .then(() => {
+                    dispatch(nextStep());
+                })
+                .catch(() => {
+                    dispatch(showDialog());
+                    dispatch(setDialogMsg('That email or username is taken'));
+                });
         }
 
         if (activeStep === 1) {
@@ -71,14 +81,15 @@ const Register: NextPage = () => {
                 return dispatch(setDialogMsg('Please enter the code'));
             }
 
-            const res = await axios.post<OutgoingDataVerifyOTP>('/api/verify-otp', { email, otp: code });
-
-            if (!res.data.verified) {
-                dispatch(showDialog());
-                return dispatch(setDialogMsg('Incorrect OTP'));
-            }
-
-            return dispatch(nextStep());
+            axios
+                .post<OutgoingDataVerifyOTP>('/api/verify-otp', { email, otp: code })
+                .then(() => {
+                    dispatch(nextStep());
+                })
+                .catch(() => {
+                    dispatch(showDialog());
+                    dispatch(setDialogMsg('Incorrect OTP'));
+                });
         }
 
         if (activeStep === 2) {
@@ -108,15 +119,18 @@ const Register: NextPage = () => {
         pfp && body.append('pfp', pfp);
         body.append('about', about);
 
-        const token = (await axios.post<OutgoingDataRegister>('/api/register', body)).data.token;
+        axios
+            .post<OutgoingDataRegister>('/api/register', body)
+            .then(res => {
+                const { token } = res.data;
 
-        if (!token) {
-            dispatch(setDialogMsg('Something went wrong on our end, please try again later'));
-            return dispatch(showDialog());
-        }
-
-        localStorage.setItem('token', token);
-        router.push('/');
+                token && localStorage.setItem('token', token);
+                router.push('/');
+            })
+            .catch(() => {
+                dispatch(setDialogMsg('Something went wrong on our end, please try again later'));
+                dispatch(showDialog());
+            });
     };
 
     return (
@@ -136,7 +150,11 @@ const Register: NextPage = () => {
                         })}
                     </Stepper>
                     <InnerSectionPaper component="section">
-                        <RegisterPageDialog />
+                        <RegisterPageDialog
+                            dialogMsg={dialogMsg}
+                            dialogOpen={dialogOpen}
+                            handleClose={() => dispatch(hideDialog())}
+                        />
                         <FormContent />
                     </InnerSectionPaper>
                     <FooterPaper component="footer">

@@ -1,48 +1,43 @@
-import type { GetServerSideProps, NextPage } from 'next';
-import type { State } from '@/redux/store';
-import type { HomePageState } from '@/redux/homePage/reducer';
-
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
 import { aspectRatioMediaQuery } from '@/components/helpers';
-import { MessageInterface, OutgoingDataGetFriendMessages } from '../api/get-friend-messages';
-
-import React from 'react';
-import axios from 'axios';
-import Head from 'next/head';
 import LeftDrawer from '@/components/Home/Drawers/LeftDrawer';
-import MessagesList from '@/components/Home/MessageList';
-import Navbar from '@/components/Home/Navbar';
-import io, { Socket } from 'socket.io-client';
+import RightDrawer from '@/components/Home/Drawers/RightDrawer';
 import HomeSpeedDial from '@/components/Home/HomeSpeedDial';
 import MessageInputBox from '@/components/Home/MessageInputBox';
+import MessagesList from '@/components/Home/MessageList';
+import Navbar from '@/components/Home/Navbar';
+import { HomePageState } from '@/redux/homePage/reducer';
+import { State } from '@/redux/store';
+import { Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import axios from 'axios';
+import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import io, { Socket } from 'socket.io-client';
+import { MessageInterface } from '../api/get-friend-messages';
+import { OutgoingDataGetRoomMessages } from '../api/get-room-messages';
 
 const AddFriendModal = dynamic(() => import('@/components/Home/Modals/AddFriendModal'));
 const CreateRoomModal = dynamic(() => import('@/components/Home/Modals/CreateRoomModal'));
 
 let socket: Socket;
 
-const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
+const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
     const widthMatch = useMediaQuery(aspectRatioMediaQuery);
-
     const { username } = useSelector<State, HomePageState>(state => state.homePage);
+    const [messages, setMessages] = React.useState<MessageInterface[]>([]);
+    const [room, setRoom] = React.useState('');
+
     const router = useRouter();
 
-    const [messages, setMessages] = React.useState<MessageInterface[]>([]);
-    const [roomNumber, setRoomNumber] = React.useState(0);
-
     React.useEffect(() => {
-        if (!friend) {
-            router.push('/');
-        }
-
         axios
-            .post<OutgoingDataGetFriendMessages>('/api/get-friend-messages', { friend, username })
+            .post<OutgoingDataGetRoomMessages>('/api/get-room-messages', { username, room_number })
             .then(res => {
                 setMessages(res.data.messages);
-                setRoomNumber(res.data.roomNumber);
+                setRoom(res.data.room);
             })
             .catch(() => {
                 router.push('/');
@@ -55,7 +50,7 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
         });
 
         socket.on('connect', () => {
-            socket.emit('join', roomNumber);
+            socket.emit('join', room_number);
         });
 
         socket.on('receiveMessage', (msg: MessageInterface) => {
@@ -67,12 +62,12 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
                 socket.disconnect();
             }
         };
-    }, [roomNumber]);
+    }, [room_number]);
 
     return (
         <>
             <Head>
-                <title>{friend}</title>
+                <title>{room}</title>
             </Head>
             <AddFriendModal />
             <CreateRoomModal />
@@ -84,6 +79,7 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
                     <Toolbar />
                     <MessagesList messages={messages} />
                     <MessageInputBox socket={socket} />
+                    <RightDrawer currentChat={room_number} widthMatch={widthMatch} />
                     <HomeSpeedDial />
                 </Box>
             </Box>
@@ -91,16 +87,16 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query: { name } }) => {
-    if (!name || Array.isArray(name)) {
+export const getServerSideProps: GetServerSideProps = async ({ query: { room_number } }) => {
+    if (!room_number || Array.isArray(room_number)) {
         return { redirect: { destination: '/', statusCode: 400 }, props: {} };
     }
 
     return {
         props: {
-            friend: name,
+            room_number,
         },
     };
 };
 
-export default FriendChat;
+export default RoomChat;

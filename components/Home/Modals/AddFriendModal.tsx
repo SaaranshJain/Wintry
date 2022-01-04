@@ -1,12 +1,14 @@
-import { OutgoingDataGetUsers } from '@/pages/api/get-users';
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+import type { OutgoingDataGetUsers } from '@/pages/api/get-users';
+
 import { setModalState } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { Autocomplete, TextField } from '@mui/material';
-import axios from 'axios';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AddFriendModalOutline, GridBox, ModalTitle, SendButton } from './helpers';
+
+import axios from 'axios';
+import React from 'react';
 
 interface Option {
     label: string;

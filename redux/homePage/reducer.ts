@@ -10,6 +10,7 @@ export interface HomePageState {
     chats: Chats;
     loading: boolean;
     modalState: 'closed' | 'add-friend' | 'create-room';
+    message: string;
 }
 
 const initialState: HomePageState = {
@@ -21,6 +22,7 @@ const initialState: HomePageState = {
     chats: { friends: [], rooms: [] },
     loading: true,
     modalState: 'closed',
+    message: '',
 };
 
 const reducer = (state = initialState, action: Action<any>): HomePageState => {
@@ -92,6 +94,13 @@ const reducer = (state = initialState, action: Action<any>): HomePageState => {
             return {
                 ...state,
                 modalState: action.payload as 'closed' | 'add-friend' | 'create-room',
+            };
+        }
+
+        case HomeActionWithPayload.SET_MESSAGE: {
+            return {
+                ...state,
+                message: action.payload as string,
             };
         }
 

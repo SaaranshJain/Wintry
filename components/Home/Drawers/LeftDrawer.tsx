@@ -1,6 +1,7 @@
+import type { HomePageState } from '@/redux/homePage/reducer';
+import type { State } from '@/redux/store';
+
 import { closeLeftDrawer, openLeftDrawer } from '@/redux/homePage/actions';
-import { HomePageState } from '@/redux/homePage/reducer';
-import { State } from '@/redux/store';
 import { Toolbar, Box, List, Divider, SwipeableDrawer, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,9 +59,9 @@ const LeftDrawerContent: React.FC = () => {
                         <Tooltip key={index} title={room.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
-                                disabled={router.pathname === `/rooms/${room.room_number}`}
+                                disabled={router.asPath === `/rooms/${room.room_number}`}
                                 style={{ opacity: 1 }}
-                                selected={router.pathname === `/rooms/${room.room_number}`}
+                                selected={router.asPath === `/rooms/${room.room_number}`}
                                 onClick={() => router.push(`/rooms/${room.room_number}`)}
                             >
                                 <ListIconWithMinWidth>

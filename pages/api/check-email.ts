@@ -40,8 +40,8 @@ const handler: PostRequestHandler<IncomingDataCheckEmail, OutgoingDataCheckEmail
 
     try {
         if (await User.findOne({ where: { [Op.or]: [{ email }, { username }] } })) {
-            res.status(200).json({ allow: false });
-            return writeToLog('register', 'User tried registering with a pre-existing email / username');
+            res.status(400).json({ allow: false });
+            return writeToLog('register', 'User tried registering with a pre-existing email or username');
         }
 
         if (!username.match(/^[a-z]{1,32}$/g)) {

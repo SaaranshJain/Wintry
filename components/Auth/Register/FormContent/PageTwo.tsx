@@ -1,6 +1,7 @@
+import type { RegisterPageState } from '@/redux/registerPage/reducer';
+import type { State } from '@/redux/store';
+
 import { setCode } from '@/redux/registerPage/actions';
-import { RegisterPageState } from '@/redux/registerPage/reducer';
-import { State } from '@/redux/store';
 import { TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,17 +12,15 @@ const PageTwo: React.FC = () => {
     const dispatch = useDispatch();
 
     return (
-        <>
-            <TextField
-                required
-                value={code}
-                onChange={ev => dispatch(setCode(ev.target.value))}
-                type="text"
-                fullWidth
-                color="primary"
-                label="OTP"
-            />
-        </>
+        <TextField
+            required
+            value={code}
+            onChange={ev => dispatch(setCode(ev.target.value))}
+            type="text"
+            fullWidth
+            color="primary"
+            label="OTP"
+        />
     );
 };
 
