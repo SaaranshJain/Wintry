@@ -17,7 +17,6 @@ const handler: PostRequestHandler<{}, {}> = (req, res) => {
 
         io.on('connection', socket => {
             socket.on('join', (id: string) => {
-                console.log(id);
                 socket.join(id);
             });
 

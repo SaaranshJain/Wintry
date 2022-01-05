@@ -34,7 +34,7 @@ const handler: PostRequestHandler<IncomingDataSendFriendRequest, OutgoingDataSen
         res.status(200).json({ success: true });
     } catch (err: any) {
         res.status(500).json({ success: false });
-        return await writeToLog('index', err.message);
+        await writeToLog('index', err.message);
     }
 };
 

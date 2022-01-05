@@ -59,10 +59,10 @@ const LeftDrawerContent: React.FC = () => {
                         <Tooltip key={index} title={room.name} placement="right">
                             <StyledLeftDrawerListItem
                                 disableRipple
-                                disabled={router.asPath === `/rooms/${room.room_number}`}
+                                disabled={router.asPath === `/rooms/${room.roomNumber}`}
                                 style={{ opacity: 1 }}
-                                selected={router.asPath === `/rooms/${room.room_number}`}
-                                onClick={() => router.push(`/rooms/${room.room_number}`)}
+                                selected={router.asPath === `/rooms/${room.roomNumber}`}
+                                onClick={() => router.push(`/rooms/${room.roomNumber}`)}
                             >
                                 <ListIconWithMinWidth>
                                     <StyledAvatarLeftDrawer

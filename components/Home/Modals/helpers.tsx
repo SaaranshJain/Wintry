@@ -46,6 +46,10 @@ export const ModalTitle = styled(Typography)<TypographyProps<'h6'>>(() => {
     return { textAlign: 'center', marginBottom: '1rem' };
 });
 
+export const ModalDescription = styled(Typography)<TypographyProps<'p'>>(() => {
+    return { textAlign: 'center', marginBottom: '1rem' };
+});
+
 export const SendButton = styled(Button)<ButtonProps>(() => {
     return { placeSelf: 'center', marginTop: '3rem' };
 });

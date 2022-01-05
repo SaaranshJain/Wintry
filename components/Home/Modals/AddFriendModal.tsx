@@ -1,18 +1,14 @@
 import type { HomePageState } from '@/redux/homePage/reducer';
 import type { State } from '@/redux/store';
-import type { OutgoingDataGetUsers } from '@/pages/api/get-users';
+import type { Option, OutgoingDataGetUsers } from '@/pages/api/get-users';
 
 import { setModalState } from '@/redux/homePage/actions';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Avatar, ListItem, ListItemAvatar, ListItemText, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddFriendModalOutline, GridBox, ModalTitle, SendButton } from './helpers';
+import { AddFriendModalOutline, GridBox, ModalDescription, ModalTitle, SendButton } from './helpers';
 
 import axios from 'axios';
 import React from 'react';
-
-interface Option {
-    label: string;
-}
 
 const AddFriendModal: React.FC = () => {
     const { username, modalState } = useSelector<State, HomePageState>(state => state.homePage);
@@ -24,14 +20,30 @@ const AddFriendModal: React.FC = () => {
     return (
         <AddFriendModalOutline open={modalState === 'add-friend'} onClose={() => dispatch(setModalState('closed'))}>
             <GridBox>
-                <ModalTitle id="modal-modal-title" variant="h6">
+                <ModalTitle id="modal-title" variant="h6">
                     Add a friend
                 </ModalTitle>
+                <ModalDescription id="modal-desc" variant="body1">
+                    Press <kbd>Enter</kbd> to search for user to send friend request to
+                </ModalDescription>
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     options={options}
                     onInputChange={(_, value) => setFriendUsername(value)}
+                    renderOption={(props, option) => (
+                        <ListItem alignItems="flex-start" {...props}>
+                            <ListItemAvatar>
+                                <Avatar src={option.pfp}>
+                                    {option.label
+                                        .split(' ')
+                                        .reduce((a, v) => a + v[0], '')
+                                        .slice(0, 2)}
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText>{option.label}</ListItemText>
+                        </ListItem>
+                    )}
                     renderInput={params => (
                         <TextField
                             {...params}
@@ -41,7 +53,8 @@ const AddFriendModal: React.FC = () => {
                                 if (ev.key === 'Enter') {
                                     axios
                                         .post<OutgoingDataGetUsers>('/api/get-users', {
-                                            username: friendUsername,
+                                            friendUsername,
+                                            username,
                                         })
                                         .then(res => {
                                             setOptions(res.data.options);

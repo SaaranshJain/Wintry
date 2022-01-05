@@ -24,7 +24,8 @@ const CreateRoomModal = dynamic(() => import('@/components/Home/Modals/CreateRoo
 
 let socket: Socket;
 
-const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
+const RoomChat: NextPage<{ roomNumber?: string }> = ({ roomNumber }) => {
+    const roomNumberInt = parseInt(roomNumber ?? '0');
     const widthMatch = useMediaQuery(aspectRatioMediaQuery);
     const { username } = useSelector<State, HomePageState>(state => state.homePage);
     const [messages, setMessages] = React.useState<MessageInterface[]>([]);
@@ -33,8 +34,13 @@ const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
     const router = useRouter();
 
     React.useEffect(() => {
+        if (!roomNumber) {
+            router.push('/');
+            return;
+        }
+
         axios
-            .post<OutgoingDataGetRoomMessages>('/api/get-room-messages', { username, room_number })
+            .post<OutgoingDataGetRoomMessages>('/api/get-room-messages', { username, roomNumberInt })
             .then(res => {
                 setMessages(res.data.messages);
                 setRoom(res.data.room);
@@ -50,7 +56,7 @@ const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
         });
 
         socket.on('connect', () => {
-            socket.emit('join', room_number);
+            socket.emit('join', roomNumberInt);
         });
 
         socket.on('receiveMessage', (msg: MessageInterface) => {
@@ -62,7 +68,7 @@ const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
                 socket.disconnect();
             }
         };
-    }, [room_number]);
+    }, [roomNumber]);
 
     return (
         <>
@@ -78,8 +84,8 @@ const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
                 <Box component="main" sx={{ width: '100%' }}>
                     <Toolbar />
                     <MessagesList messages={messages} />
-                    <MessageInputBox socket={socket} />
-                    <RightDrawer currentChat={room_number} widthMatch={widthMatch} />
+                    <MessageInputBox roomNumber={roomNumberInt} socket={socket} />
+                    <RightDrawer currentChat={roomNumber} widthMatch={widthMatch} />
                     <HomeSpeedDial />
                 </Box>
             </Box>
@@ -87,14 +93,14 @@ const RoomChat: NextPage<{ room_number?: string }> = ({ room_number }) => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query: { room_number } }) => {
-    if (!room_number || Array.isArray(room_number)) {
+export const getServerSideProps: GetServerSideProps = async ({ query: { roomNumber } }) => {
+    if (!roomNumber || Array.isArray(roomNumber)) {
         return { redirect: { destination: '/', statusCode: 400 }, props: {} };
     }
 
     return {
         props: {
-            room_number,
+            roomNumber,
         },
     };
 };

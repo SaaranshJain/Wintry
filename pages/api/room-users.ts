@@ -5,7 +5,7 @@ import { config as configEnv } from 'dotenv';
 configEnv();
 
 interface IncomingDataRoomUsers {
-    room_number: string;
+    roomNumber: string;
 }
 
 export interface Member {
@@ -24,10 +24,10 @@ const handler: PostRequestHandler<IncomingDataRoomUsers, OutgoingDataRoomUsers> 
         return await writeToLog('index', `Request sent to /api/room-users using unallowed method : ${req.method}\n`);
     }
 
-    const { room_number } = req.body;
+    const { roomNumber } = req.body;
 
     try {
-        const room = await Room.findOne({ where: { room_number } });
+        const room = await Room.findOne({ where: { roomNumber } });
 
         if (!room) {
             res.status(200).send({ members: [] });
@@ -39,7 +39,7 @@ const handler: PostRequestHandler<IncomingDataRoomUsers, OutgoingDataRoomUsers> 
         res.status(200).json({ members: roomUsers.map(user => ({ id: user.id, pfp: user.pfp, name: user.username })) });
     } catch (err: any) {
         res.status(500).json({ members: [] });
-        writeToLog('index', err.message);
+        await writeToLog('index', err.message);
     }
 };
 

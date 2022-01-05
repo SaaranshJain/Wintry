@@ -8,7 +8,7 @@ import { IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { InputPaper, TextFieldInput } from './helpers';
 
-const MessageInputBox: React.FC<{ socket: Socket }> = ({ socket }) => {
+const MessageInputBox: React.FC<{ socket: Socket, roomNumber: number; }> = ({ socket, roomNumber }) => {
     const { message } = useSelector<State, HomePageState>(state => state.homePage);
     const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ const MessageInputBox: React.FC<{ socket: Socket }> = ({ socket }) => {
                 onKeyDown={ev => {
                     if (ev.key === 'Enter' && !ev.shiftKey) {
                         ev.preventDefault();
-                        socket.emit('sendMessage', message);
+                        socket.emit('sendMessage', message, roomNumber);
                         dispatch(setMessage(''));
                     }
                 }}
@@ -31,7 +31,7 @@ const MessageInputBox: React.FC<{ socket: Socket }> = ({ socket }) => {
             <IconButton
                 disableRipple
                 onClick={() => {
-                    socket.emit('sendMessage', message);
+                    socket.emit('sendMessage', message, roomNumber);
                     dispatch(setMessage(''));
                 }}
             >

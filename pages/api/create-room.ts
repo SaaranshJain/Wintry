@@ -33,7 +33,7 @@ const parseForm = (req: ApiRequest<IncomingDataCreateRoom>) =>
 const handler: PostRequestHandler<IncomingDataCreateRoom, OutgoingDataCreateRoom> = async (req, res) => {
     if (req.method !== 'POST') {
         res.status(405); // method not allowed
-        return writeToLog('index', `Request sent to /api/register using unallowed method : ${req.method}\n`);
+        return writeToLog('index', `Request sent to /api/create-room using unallowed method : ${req.method}\n`);
     }
 
     try {
@@ -75,9 +75,8 @@ const handler: PostRequestHandler<IncomingDataCreateRoom, OutgoingDataCreateRoom
         await room.addUser(user);
         res.status(200).json({});
     } catch (err: any) {
-        console.error(err);
         res.status(500).json({ token: null });
-        await writeToLog('register', err.message);
+        await writeToLog('index', err.message);
     }
 };
 

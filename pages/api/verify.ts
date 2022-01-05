@@ -21,7 +21,7 @@ export interface Chats {
     rooms: {
         pfp: string | null;
         name: string;
-        room_number: number;
+        roomNumber: number;
     }[];
 }
 
@@ -35,6 +35,11 @@ interface OutgoingDataVerified {
 export type OutgoingDataVerify = OutgoingDataNotVerified | OutgoingDataVerified;
 
 const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = async (req, res) => {
+    if (req.method !== 'POST') {
+        res.status(405); // method not allowed
+        return writeToLog('index', `Request sent to /api/verify using unallowed method : ${req.method}\n`);
+    }
+
     const secret = process.env['SECRET'];
 
     if (!secret) {
@@ -66,7 +71,7 @@ const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = asyn
         const rooms = (await user.getRooms({ where: { isDM: false } })).map(room => ({
             pfp: room.pfp,
             name: room.name,
-            room_number: room.room_number,
+            roomNumber: room.roomNumber,
         }));
 
         const chats = { friends, rooms };
@@ -74,7 +79,7 @@ const handler: PostRequestHandler<IncomingDataVerify, OutgoingDataVerify> = asyn
         res.status(200).json({ verified: true, email: user.email, username: user.username, chats });
     } catch (err: any) {
         res.status(200).json({ verified: false });
-        writeToLog('index', err.message);
+        await writeToLog('index', err.message);
     }
 };
 

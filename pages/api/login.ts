@@ -53,6 +53,7 @@ const handler: PostRequestHandler<IncomingDataLogin, OutgoingDataLogin> = async 
         res.status(200).json({ token, message: 'Login successful' });
     } catch (err: any) {
         res.status(500).json({ token: null, message: 'Something went wrong' });
+        await writeToLog('login', err.message);
     }
 };
 

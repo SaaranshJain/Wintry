@@ -83,7 +83,7 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
                 <Box component="main" sx={{ width: '100%' }}>
                     <Toolbar />
                     <MessagesList messages={messages} />
-                    <MessageInputBox socket={socket} />
+                    <MessageInputBox socket={socket} roomNumber={roomNumber} />
                     <HomeSpeedDial />
                 </Box>
             </Box>
