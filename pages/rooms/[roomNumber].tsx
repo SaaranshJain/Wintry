@@ -40,7 +40,7 @@ const RoomChat: NextPage<{ roomNumber?: string }> = ({ roomNumber }) => {
         }
 
         axios
-            .post<OutgoingDataGetRoomMessages>('/api/get-room-messages', { username, roomNumberInt })
+            .post<OutgoingDataGetRoomMessages>('/api/get-room-messages', { username, roomNumber: roomNumberInt })
             .then(res => {
                 setMessages(res.data.messages);
                 setRoom(res.data.room);

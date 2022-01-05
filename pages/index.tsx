@@ -56,7 +56,7 @@ const Home: NextPage = () => {
                 <Box component="main" sx={{ width: '100%' }}>
                     <Toolbar />
                     <MessagesList messages={messages} />
-                    <MessageInputBox socket={socket} />
+                    <MessageInputBox roomNumber={0} socket={socket} />
                     <HomeSpeedDial />
                 </Box>
             </Box>

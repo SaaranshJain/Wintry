@@ -4,7 +4,7 @@ import { MessageInterface } from './get-friend-messages';
 
 interface IncomingDataGetRoomMessages {
     username: string;
-    roomNumber: string;
+    roomNumber: number;
 }
 
 export interface OutgoingDataGetRoomMessages {
