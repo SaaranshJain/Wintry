@@ -23,13 +23,6 @@ export type PostRequestHandler<IncomingData, OutgoingData> = (
 
 export const writeToLog = async (route: string, logmsg: string) => {
     const logFilePath = `./logs/${route}.log`;
-
-    try {
-        await access(logFilePath);
-    } catch (err) {
-        await appendFile(logFilePath, '');
-    }
-
     await appendFile(logFilePath, `[${new Date().toString()}]\n${logmsg}\n`);
 };
 
