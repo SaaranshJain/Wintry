@@ -47,7 +47,7 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
             .catch(() => {
                 router.push('/');
             });
-    }, [router]);
+    }, [router, friend, username]);
 
     React.useEffect(() => {
         socket = io('http://localhost:3000', {

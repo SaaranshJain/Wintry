@@ -48,7 +48,7 @@ const RoomChat: NextPage<{ roomNumber?: string }> = ({ roomNumber }) => {
             .catch(() => {
                 router.push('/');
             });
-    }, [router]);
+    }, [router, roomNumber, roomNumberInt, username]);
 
     React.useEffect(() => {
         socket = io('http://localhost:3000', {
@@ -68,7 +68,7 @@ const RoomChat: NextPage<{ roomNumber?: string }> = ({ roomNumber }) => {
                 socket.disconnect();
             }
         };
-    }, [roomNumber]);
+    }, [roomNumberInt]);
 
     return (
         <>

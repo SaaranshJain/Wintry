@@ -26,9 +26,13 @@ const Transition = React.forwardRef(
     ) => <Slide direction="up" ref={ref} {...props} />
 );
 
+Transition.displayName = 'Transition';
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
     <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
+
+Alert.displayName = 'Alert';
 
 interface PageDialogProps {
     dialogOpen: boolean;
