@@ -13,6 +13,8 @@ import {
     ListItemAvatar,
     ListItemText,
     Badge,
+    Menu,
+    Avatar,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -22,14 +24,15 @@ import {
     RightDrawerOutline,
     StyledAvatarRightDrawer,
 } from './helpers';
+import { useRouter } from 'next/router';
 
 import axios from 'axios';
 import React from 'react';
-import { useRouter } from 'next/router';
 
 const RightDrawerContent: React.FC<{ currentChat: string }> = ({ currentChat }) => {
     const { loading } = useSelector<State, HomePageState>(state => state.homePage);
     const [members, setMembers] = React.useState<Member[]>([]);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const router = useRouter();
 
     React.useEffect(() => {
@@ -55,7 +58,16 @@ const RightDrawerContent: React.FC<{ currentChat: string }> = ({ currentChat }) 
                 <PaddedAccordionDetails>
                     <List>
                         {members.map(member => (
-                            <AccordionListItem key={member.id}>
+                            <AccordionListItem
+                                key={member.id}
+                                onClick={ev => {
+                                    ev.preventDefault();
+                                    setAnchorEl(ev.currentTarget);
+                                }}
+                            >
+                                <Menu sx={{ zIndex: 12000 }} anchorEl={anchorEl} open={!!anchorEl} onClose={() => setAnchorEl(null)}>
+                                    <Avatar src={member.pfp} />
+                                </Menu>
                                 <ListItemAvatar>
                                     <Badge
                                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

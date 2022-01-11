@@ -151,9 +151,20 @@ export class Room extends Model {
     public removeMessages!: HasManyRemoveAssociationsMixin<Message, string>;
     public createMessage!: HasManyCreateAssociationMixin<Message>;
 
+    public getInvites!: HasManyGetAssociationsMixin<Invite>;
+    public countInvites!: HasManyCountAssociationsMixin;
+    public hasInvite!: HasManyHasAssociationMixin<Invite, string>;
+    public hasInvites!: HasManyHasAssociationsMixin<Invite, string>;
+    public addInvite!: HasManyAddAssociationMixin<Invite, string>;
+    public addInvites!: HasManyAddAssociationsMixin<Invite, string>;
+    public removeInvite!: HasManyRemoveAssociationMixin<Invite, string>;
+    public removeInvites!: HasManyRemoveAssociationsMixin<Invite, string>;
+    public createInvite!: HasManyCreateAssociationMixin<Invite>;
+
     public static associations: {
         user: Association<Room, User>;
         message: Association<Room, Message>;
+        invite: Association<Room, Invite>;
     };
 }
 
@@ -232,6 +243,31 @@ Message.init(
     }
 );
 
+export class Invite extends Model {
+    public id!: string;
+
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+
+    public getRoom!: BelongsToGetAssociationMixin<Room>;
+    public setRoom!: BelongsToSetAssociationMixin<Room, string>;
+    public createRoom!: BelongsToCreateAssociationMixin<Room>;
+
+    public static associations: {
+        room: Association<Invite, Room>;
+    };
+}
+
+Invite.init(
+    {
+        id: {
+            type: new DataTypes.STRING(36),
+            primaryKey: true,
+        },
+    },
+    { sequelize, tableName: 'invites' }
+);
+
 class Friend extends Model {
     public firstFriendId!: string;
     public secondFriendId!: string;
@@ -254,9 +290,11 @@ User.hasMany(Message);
 
 Room.belongsToMany(User, { through: RoomUser });
 Room.hasMany(Message);
+Room.hasMany(Invite);
 
 Message.belongsTo(User);
 Message.belongsTo(Room);
+Invite.belongsTo(Room);
 
 (async () => {
     try {
@@ -265,6 +303,7 @@ Message.belongsTo(Room);
         await Message.sync();
         await Friend.sync();
         await RoomUser.sync();
+        await Invite.sync();
     } catch (err) {
         console.error(err);
     }

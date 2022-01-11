@@ -11,7 +11,7 @@ import {
 import { setModalState } from '@/redux/homePage/actions';
 import { Badge, TextField, Tooltip, Zoom } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateRoomModalOutline, GridBox, ModalTitle, SendButton } from './helpers';
+import { CreateRoomModalOutline, GridBox, ModalDescription, ModalTitle, SendButton } from './helpers';
 
 import axios from 'axios';
 import React from 'react';
@@ -74,9 +74,12 @@ const CreateRoomModal: React.FC = () => {
     return (
         <CreateRoomModalOutline open={modalState === 'create-room'} onClose={() => dispatch(setModalState('closed'))}>
             <GridBox sx={{ placeItems: 'center' }}>
-                <ModalTitle id="modal-modal-title" variant="h6">
+                <ModalTitle variant="h6">
                     Create a room
                 </ModalTitle>
+                <ModalDescription variant='body1' color="ActiveCaption">
+                    Create a room to hang out with your homies!
+                </ModalDescription>
                 <Tooltip
                     TransitionComponent={Zoom}
                     sx={{ display: 'grid', placeItems: 'center' }}

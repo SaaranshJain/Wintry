@@ -20,15 +20,14 @@ const AddFriendModal: React.FC = () => {
     return (
         <AddFriendModalOutline open={modalState === 'add-friend'} onClose={() => dispatch(setModalState('closed'))}>
             <GridBox>
-                <ModalTitle id="modal-title" variant="h6">
+                <ModalTitle variant="h6">
                     Add a friend
                 </ModalTitle>
-                <ModalDescription id="modal-desc" variant="body1">
+                <ModalDescription variant="body1" color="ActiveCaption">
                     Press <kbd>Enter</kbd> to search for user to send friend request to
                 </ModalDescription>
                 <Autocomplete
                     disablePortal
-                    id="combo-box-demo"
                     options={options}
                     onInputChange={(_, value) => setFriendUsername(value)}
                     renderOption={(props, option) => (

@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
                     </IconButton>
                 )}
                 <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                    Omnipresent
+                    Wintry
                 </Typography>
                 {!widthMatch && (
                     <IconButton

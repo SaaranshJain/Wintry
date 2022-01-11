@@ -9,7 +9,7 @@ export interface HomePageState {
     rightDrawerOpen: boolean;
     chats: Chats;
     loading: boolean;
-    modalState: 'closed' | 'add-friend' | 'create-room';
+    modalState: 'closed' | 'add-friend' | 'create-room' | 'invite';
     message: string;
 }
 
