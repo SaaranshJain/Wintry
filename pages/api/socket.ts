@@ -1,3 +1,4 @@
+import { Room } from '@/db';
 import { PostRequestHandler } from '@/helpers';
 import { Server } from 'socket.io';
 
@@ -6,6 +7,12 @@ export const config = {
         bodyParser: false,
     },
 };
+
+interface ActiveSockets {
+    [username: string]: string;
+}
+
+const activeSockets: ActiveSockets = {};
 
 const handler: PostRequestHandler<{}, {}> = (req, res) => {
     if (!res.socket?.server?.io) {
@@ -16,12 +23,29 @@ const handler: PostRequestHandler<{}, {}> = (req, res) => {
         res.socket.server.io = io;
 
         io.on('connection', socket => {
-            socket.on('join', (id: string) => {
-                socket.join(id);
+            socket.on('join', (username: string) => {
+                activeSockets[username] = socket.id;
             });
 
-            socket.on('sendMessage', (message: string, id: string) => {
-                io.to(id).emit('receiveMessage', { displayName: 'tinmanfall', content: message, pfp: '' });
+            socket.on('sendMessage', (message: string, roomNumber: number) => {
+                console.log(activeSockets);
+                Room.findOne({ where: { roomNumber } })
+                    .then(room => {
+                        if (!room) {
+                            return;
+                        }
+
+                        room.getUsers()
+                            .then(users => {
+                                io.to(users.map(user => activeSockets[user.username]).filter(e => !!e)).emit(
+                                    'receiveMessage',
+                                    room.roomNumber,
+                                    { displayName: 'tinmanfall', content: message, pfp: '' }
+                                );
+                            })
+                            .catch(() => {});
+                    })
+                    .catch(() => {});
             });
         });
     }

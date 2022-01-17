@@ -55,11 +55,16 @@ const FriendChat: NextPage<{ friend?: string }> = ({ friend }) => {
         });
 
         socket.on('connect', () => {
-            socket.emit('join', roomNumber);
+            socket.emit('join', username);
         });
 
-        socket.on('receiveMessage', (msg: MessageInterface) => {
-            setMessages(msgs => [...msgs, msg]);
+        socket.on('receiveMessage', (roomno, msg: MessageInterface) => {
+            if (roomno === roomNumber) {
+                setMessages(msgs => [...msgs, msg]);
+            } else {
+                console.log(msg);
+                // Pop a notif!
+            }
         });
 
         return () => {

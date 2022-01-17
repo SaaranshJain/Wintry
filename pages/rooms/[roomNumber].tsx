@@ -56,16 +56,21 @@ const RoomChat: NextPage<{ roomNumber?: string }> = ({ roomNumber }) => {
         });
 
         socket.on('connect', () => {
-            socket.emit('join', roomNumberInt);
+            socket.emit('join', username);
         });
 
-        socket.on('receiveMessage', (msg: MessageInterface) => {
-            setMessages(msgs => [...msgs, msg]);
+        socket.on('receiveMessage', (roomno, msg: MessageInterface) => {
+            if (roomno === roomNumberInt) {
+                setMessages(msgs => [...msgs, msg]);
+            } else {
+                console.log(msg);
+                // Pop a notif!
+            }
         });
 
         return () => {
             if (socket) {
-                socket.disconnect();
+                socket.off();
             }
         };
     }, [roomNumberInt]);
